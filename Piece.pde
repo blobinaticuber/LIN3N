@@ -1,6 +1,8 @@
 class Piece {
   int dim;
   int idx;
+  boolean wasClicked;
+  int xStickerCenterCoordinate;
 
   //Matrix orientation = new Matrix
   NVector position;
@@ -17,6 +19,10 @@ class Piece {
     strokeWeight(1);
     pushMatrix();
     //translate to x sticker of piece
+    
+    xStickerCenterCoordinate = (width/puzzle.bulk)*(idx-((puzzle.bulk-1)/2));
+    //println(xStickerCenterCoordinate);
+    
     translate((width/puzzle.bulk)*(idx-((puzzle.bulk-1)/2)), 0);
     // s is the size to draw the boxes, leaving a gap of 2 on either side
     int s = (width/puzzle.bulk)/((2*dim)+1);
@@ -42,4 +48,26 @@ class Piece {
 
     popMatrix();
   }
+  
+  // returns the number of colours a piece has
+  int getC() {
+    int r = 0;
+    for (int a = 0; a < dim; a++) {
+      r += abs(position.get(a));
+    }
+    return r;
+  }
+  
+  boolean clickCheck(float clickX, float clickY) {
+    int s = (width/puzzle.bulk)/((2*dim)+1);
+    if (clickX < xStickerCenterCoordinate+(s/2) && clickX > xStickerCenterCoordinate-(s/2)) {
+      if (clickY < (s/2) && clickY > (-1)*(s/2)) {
+        return true;
+      }
+    } 
+    return false;
+    
+  }
+  
+  
 }

@@ -38,11 +38,9 @@ class Puzzle {
         // clever thing to get the ijk etc from the loop (see my ms paint drawing)
         vec[d-1-v] = (p/((int)pow(3, v))%3)-1;
       }
-      printArray(vec);
-      print("\n");
-
+      //printArray(vec);
+      //print("\n");
       pieces[p] = new Piece(new NVector(vec),p);
-      //println(p);
     }
   }
 
@@ -52,5 +50,6 @@ class Puzzle {
       p.draw();
     }
     //pieces[].draw();
+    // for debugging certain pieces, put the index of the piece
   }
 }

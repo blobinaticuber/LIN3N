@@ -5,6 +5,8 @@
 int viewOffset = 0;
 float zoomwee = 1.0;
 float mouseDragStart = 0.0;
+float clickX;
+float clickY;
 
 void setup() {
   size(800, 800, P3D);
@@ -30,6 +32,8 @@ void drawDebugText() {
   fill(255, 255, 255);
   textSize(24);
   text("Puzzle: 3^" + puzzle.dim, 10, 24);
+  text("Mouse click X: " + clickX, 10, 48);
+  text("Mouse click Y: " + clickY, 10, 72);
   //text("Number of pieces: " + (int)pow(3, puzzle.dim), 10, 48);
   //text("For each piece i want to draw " + (1+(2*(puzzle.dim-1))) + " stickers", 10, 72);
 }
@@ -48,5 +52,16 @@ void mouseDragged() {
 }
 
 void mousePressed() {
+  // camera stuff
   mouseDragStart = mouseX;
+  
+  // piece clicking stuff
+  clickX = (mouseX-width/2)/abs(zoomwee);
+  clickY = (mouseY-height/2)/abs(zoomwee);
+  for (Piece p : puzzle.pieces) {
+      // it still slightly not work sometimes???
+      if (p.clickCheck(clickX, clickY)) println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
+    }
+  
+  
 }
