@@ -17,25 +17,9 @@ Puzzle puzzle = new Puzzle(3);
 
 
 void draw() {
-
-
-  translate(0, 0);
   background(64);
-
   drawDebugText();
-
   translate(width/2+viewOffset, height/2);
-
-  //for (int q = 1; q < 2; q++) {
-  //  rect(0, 0, 30, 30);
-  //  rect(0-(width/((int)pow(3,q))), 0, 30, 30);
-  //  rect(0+(width/((int)pow(3,q))), 0, 30, 30);
-  //}
-
-
-  //rect(width/2,0,30,30);
-  //rect(width/3,0,30,30);
-
   pushMatrix();
   scale(abs(zoomwee));
   puzzle.draw();
@@ -43,11 +27,11 @@ void draw() {
 }
 
 void drawDebugText() {
-  fill(0, 0, 0);
+  fill(255, 255, 255);
   textSize(24);
   text("Puzzle: 3^" + puzzle.dim, 10, 24);
-  text("Number of pieces: " + (int)pow(3, puzzle.dim), 10, 48);
-  text("For each piece i want to draw " + (1+(2*(puzzle.dim-1))) + " stickers", 10, 72);
+  //text("Number of pieces: " + (int)pow(3, puzzle.dim), 10, 48);
+  //text("For each piece i want to draw " + (1+(2*(puzzle.dim-1))) + " stickers", 10, 72);
 }
 
 void keyPressed() {
@@ -56,7 +40,6 @@ void keyPressed() {
 
 void mouseWheel(MouseEvent event) {
   float e = event.getCount();
-  //viewOffset += mouseX/200;
   zoomwee += e/10.0;
 }
 
