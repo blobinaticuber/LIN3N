@@ -14,10 +14,12 @@ class Puzzle {
   color blue = color(0, 0, 255);
   color pink = color(255, 0, 255);
   color purple = color(128, 0, 255);
+  color dgrey = color(16,16,16);
+  color seagreen = color(64,128,128);
   color transparent = color(255, 255, 255, 0);
 
-  color[] posColours = {red, white, green, pink};
-  color[] negColours = {orange, yellow, blue, purple};
+  color[] posColours = {red, white, green, pink, seagreen};
+  color[] negColours = {orange, yellow, blue, purple, dgrey};
 
 
 

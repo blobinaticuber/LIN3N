@@ -7,25 +7,30 @@ float zoomwee = 1.0;
 float mouseDragStart = 0.0;
 float clickX;
 float clickY;
+color bg = color(64);
 
 void setup() {
   size(800, 800, P3D);
   surface.setLocation(100, 100);
 }
 
-Puzzle puzzle = new Puzzle(3);
+Menu menu = new Menu();
+Puzzle puzzle = new Puzzle(menu.puzzleSize);
+
 
 
 
 
 void draw() {
-  background(64);
-  drawDebugText();
-  translate(width/2+viewOffset, height/2);
+  background(bg);
+  
   pushMatrix();
+  translate(width/2+viewOffset, height/2);
   scale(abs(zoomwee));
   puzzle.draw();
   popMatrix();
+  translate(0,0); scale(1);
+  menu.draw();
 }
 
 void drawDebugText() {
@@ -55,9 +60,14 @@ void mousePressed() {
   // camera stuff
   mouseDragStart = mouseX;
   
+  // Menu stuff
+  menu.handleClicks(mouseX, mouseY);
+  
   // piece clicking stuff
-  clickX = (mouseX-width/2)/abs(zoomwee);
-  clickY = (mouseY-height/2)/abs(zoomwee);
+  clickX = ((mouseX-width/2)/abs(zoomwee))+viewOffset;
+  clickY = ((mouseY-height/2)/abs(zoomwee));
+  // it works at any zoom level, but when you pan left or right it breaks
+  // therefore the viewOffset componenet of the above formula is wrong in some way
   for (Piece p : puzzle.pieces) {
       // it still slightly not work sometimes???
       if (p.clickCheck(clickX, clickY)) println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
