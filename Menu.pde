@@ -5,15 +5,6 @@ class Menu {
   Button dimDecrease;
   Button dimIncrease;
 
-  //MenuPanel[] menuPanels = new MenuPanel[1];
-
-
-  //Menu() {
-  //  MenuPanel PuzzleMenu = new MenuPanel();
-  //  menuPanels[0] = PuzzleMenu;
-
-  //}
-
 
   void draw() {
     strokeWeight(5);
