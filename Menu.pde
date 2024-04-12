@@ -1,12 +1,32 @@
 class Menu {
 
   int puzzleSize = 2;
-
+  int menuPanelWidth;
+  int menuPanelHeight;
+  
+  int buttonWidth;
+  int buttonHeight;
+  
   Button dimDecrease;
   Button dimIncrease;
 
+  Menu() {
+    menuPanelWidth = width/3;
+    menuPanelHeight = height/3;
+    buttonWidth = menuPanelWidth/2;
+    buttonHeight = menuPanelHeight/2;
+  }
+
+
+
+  
+
 
   void draw() {
+    menuPanelWidth = width/3;
+    menuPanelHeight = height/3;
+    buttonWidth = menuPanelWidth/2;
+    buttonHeight = menuPanelHeight/2;
     strokeWeight(5);
     pushMatrix();
     translate(0, 0);
@@ -24,14 +44,14 @@ class Menu {
   void drawPuzzleMenu() {
     fill(32, 32, 32);
     rectMode(CORNER);
-    rect(0, 0, width/3, height/3);
+    rect(0, 0, menuPanelWidth, menuPanelHeight);
     fill(255, 255, 255);
     textSize(48);
     text("Puzzle", 10, 48);
     text("3^"+puzzle.dim, 10, 100);
-    dimDecrease = new Button(color(48), 0, width/3/2, width/3/2, height/3/2);
+    dimDecrease = new Button(color(48), 0, buttonHeight, buttonWidth, buttonHeight);
     dimDecrease.draw();
-    dimIncrease = new Button(color(48), width/3/2, width/3/2, width/3/2, height/3/2);
+    dimIncrease = new Button(color(48), buttonWidth, buttonHeight, buttonWidth, buttonHeight);
     dimIncrease.draw();
     // minus symbol on top of dimDecrease button
     stroke(255);
@@ -64,7 +84,7 @@ class Menu {
     fill(255, 255, 255);
     textSize(48);
     text("Colours", 10+(2*width/3), 48);
-    
+
     // refactor later to make the boxes uniform
     for (int c = 0; c < puzzle.posColours.length; c++) {
       int cl = puzzle.posColours.length;
@@ -74,8 +94,8 @@ class Menu {
       rect(2*width/3 + (c*width/3/cl), 200, width/3/cl, height/3/cl);
     }
   }
-  
-  
+
+
   void drawFiltersMenu() {
     fill(32, 32, 32);
     rectMode(CORNER);
@@ -83,9 +103,8 @@ class Menu {
     fill(255, 255, 255);
     textSize(48);
     text("Filters", 10, 2*height/3 + 48);
-    
   }
-  
+
   void drawProgressMenu() {
     fill(32, 32, 32);
     rectMode(CORNER);
@@ -93,9 +112,8 @@ class Menu {
     fill(255, 255, 255);
     textSize(48);
     text("Progress", width/3 + 10, 2*height/3 + 48);
-    
   }
-  
+
   void drawControlsMenu() {
     fill(32, 32, 32);
     rectMode(CORNER);
@@ -103,7 +121,6 @@ class Menu {
     fill(255, 255, 255);
     textSize(48);
     text("Controls", 2*width/3 + 10, 2*height/3 + 48);
-    
   }
 
 
