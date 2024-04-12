@@ -13,20 +13,26 @@ class Piece {
     this.idx = idx;
   }
 
-// draw ALL of the sticker of the piece
+  // draw ALL of the sticker of the piece
   void draw() {
     rectMode(CENTER);
     strokeWeight(1);
+    stroke(puzzle.black);
+    if (wasClicked) {
+      stroke(puzzle.white);
+      strokeWeight(5);
+    }
+    
     pushMatrix();
     //translate to x sticker of piece
-    
-    xStickerCenterCoordinate = (width/(puzzle.bulk/(int)pow(3,dim-1)))*(idx-((puzzle.bulk-1)/2));
+
+    xStickerCenterCoordinate = (width/(puzzle.bulk/(int)pow(3, dim-1)))*(idx-((puzzle.bulk-1)/2));
     //println(xStickerCenterCoordinate);
-    
+
     translate(xStickerCenterCoordinate, 0);
     // s is the size to draw the boxes, leaving a gap of 2 on either side
-    int s = (width/(puzzle.bulk/(int)pow(3,dim-1)))/((2*dim)+1);
-    
+    int s = (width/(puzzle.bulk/(int)pow(3, dim-1)))/((2*dim)+1);
+
     for (int d = 1; d < dim+1; d++) {
       color c1 = puzzle.transparent;
       color c2 = puzzle.transparent;
@@ -47,8 +53,10 @@ class Piece {
     }
 
     popMatrix();
+    strokeWeight(1);
+    stroke(puzzle.black);
   }
-  
+
   // returns the number of colours a piece has
   int getC() {
     int r = 0;
@@ -57,17 +65,16 @@ class Piece {
     }
     return r;
   }
-  
+
   boolean clickCheck(float clickX, float clickY) {
-    int s = (width/puzzle.bulk)/((2*dim)+1);
+    int s = (width/(puzzle.bulk/(int)pow(3, dim-1)))/((2*dim)+1);
     if (clickX < xStickerCenterCoordinate+(s/2) && clickX > xStickerCenterCoordinate-(s/2)) {
       if (clickY < (s/2) && clickY > (-1)*(s/2)) {
+        wasClicked = true;
         return true;
       }
-    } 
+    }
+    wasClicked = false;
     return false;
-    
   }
-  
-  
 }

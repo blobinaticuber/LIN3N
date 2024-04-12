@@ -5,7 +5,9 @@ class Puzzle {
   int bulk;
   // bulk is 3^d
   
-  color core = color(0, 0, 0);
+  color black = color(0, 0, 0);
+  color transparent = color(255, 255, 255, 0);
+  
   color red = color(255, 0, 0);
   color orange = color(255, 128, 0);
   color white = color(255, 255, 255);
@@ -16,10 +18,12 @@ class Puzzle {
   color purple = color(128, 0, 255);
   color dgrey = color(16,16,16);
   color seagreen = color(64,128,128);
-  color transparent = color(255, 255, 255, 0);
+  color brick = color(128,0,0);
+  color brown = color(128,64,0);
+  
 
-  color[] posColours = {red, white, green, pink, seagreen};
-  color[] negColours = {orange, yellow, blue, purple, dgrey};
+  color[] posColours = {red, white, green, pink, seagreen, brick, red};
+  color[] negColours = {orange, yellow, blue, purple, dgrey, brown, orange};
 
 
 
