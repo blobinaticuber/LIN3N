@@ -1,13 +1,14 @@
 class Puzzle {
 
   Piece[] pieces;
+  Piece[] clickedPieces = new Piece[2];
   int dim;
   int bulk;
   // bulk is 3^d
-  
+
   color black = color(0, 0, 0);
   color transparent = color(255, 255, 255, 0);
-  
+
   color red = color(255, 0, 0);
   color orange = color(255, 128, 0);
   color white = color(255, 255, 255);
@@ -16,11 +17,11 @@ class Puzzle {
   color blue = color(0, 0, 255);
   color pink = color(255, 0, 255);
   color purple = color(128, 0, 255);
-  color dgrey = color(16,16,16);
-  color seagreen = color(64,128,128);
-  color brick = color(128,0,0);
-  color brown = color(128,64,0);
-  
+  color dgrey = color(16, 16, 16);
+  color seagreen = color(64, 128, 128);
+  color brick = color(128, 0, 0);
+  color brown = color(128, 64, 0);
+
 
   color[] posColours = {red, white, green, pink, seagreen, brick, red};
   color[] negColours = {orange, yellow, blue, purple, dgrey, brown, orange};
@@ -28,11 +29,13 @@ class Puzzle {
 
 
   Puzzle(int d) {
+    // resets the view to the center of the puzzle when making a new puzzle
     viewOffset = 0;
     zoomwee = 1.0;
+
     dim = d;
-    
-    bulk = (int)pow(3,dim);
+
+    bulk = (int)pow(3, dim);
 
     pieces = new Piece[bulk];
 
@@ -48,7 +51,7 @@ class Puzzle {
       }
       //printArray(vec);
       //print("\n");
-      pieces[p] = new Piece(new NVector(vec),p);
+      pieces[p] = new Piece(new NVector(vec), p);
     }
   }
 

@@ -70,6 +70,7 @@ class Piece {
     int s = (width/(puzzle.bulk/(int)pow(3, dim-1)))/((2*dim)+1);
     if (clickX < xStickerCenterCoordinate+(s/2) && clickX > xStickerCenterCoordinate-(s/2)) {
       if (clickY < (s/2) && clickY > (-1)*(s/2)) {
+        puzzle.clickedPieces[0] = this;
         wasClicked = true;
         return true;
       }
