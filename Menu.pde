@@ -82,12 +82,12 @@ class Menu {
     if (dimDecrease.clicked(x, y) && puzzle.dim>1) {
       puzzleSize--;
       puzzle = new Puzzle(puzzleSize);
-      println("decrease size");
+      //println("decrease size");
     }
     if (dimIncrease.clicked(x, y) && puzzle.dim<5) {
       puzzleSize++;
       puzzle = new Puzzle(puzzleSize);
-      println("increase size");
+      //println("increase size");
     }
   }
 

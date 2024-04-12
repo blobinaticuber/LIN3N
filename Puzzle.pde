@@ -24,6 +24,8 @@ class Puzzle {
 
 
   Puzzle(int d) {
+    viewOffset = 0;
+    zoomwee = 1.0;
     dim = d;
     
     bulk = (int)pow(3,dim);

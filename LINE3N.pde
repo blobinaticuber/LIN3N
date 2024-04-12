@@ -4,7 +4,8 @@
 
 int viewOffset = 0;
 float zoomwee = 1.0;
-float mouseDragStart = 0.0;
+float mouseDragXStart = 0.0;
+float mouseDragYStart = 0.0;
 float clickX;
 float clickY;
 color bg = color(64);
@@ -53,12 +54,14 @@ void mouseWheel(MouseEvent event) {
 }
 
 void mouseDragged() {
-  viewOffset -= 5*(mouseDragStart-mouseX > 0 ? 1: -1);
+  viewOffset -= 5*(mouseDragXStart-mouseX > 0 ? 1: -1);
+  //zoomwee += (mouseDragYStart-mouseY > 0 ? 0.01 : -0.01);
 }
 
 void mousePressed() {
   // camera stuff
-  mouseDragStart = mouseX;
+  mouseDragXStart = mouseX;
+  mouseDragYStart = mouseY;
   
   // Menu stuff
   menu.handleClicks(mouseX, mouseY);

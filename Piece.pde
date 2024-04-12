@@ -20,12 +20,12 @@ class Piece {
     pushMatrix();
     //translate to x sticker of piece
     
-    xStickerCenterCoordinate = (width/puzzle.bulk)*(idx-((puzzle.bulk-1)/2));
+    xStickerCenterCoordinate = (width/(puzzle.bulk/(int)pow(3,dim-1)))*(idx-((puzzle.bulk-1)/2));
     //println(xStickerCenterCoordinate);
     
-    translate((width/puzzle.bulk)*(idx-((puzzle.bulk-1)/2)), 0);
+    translate(xStickerCenterCoordinate, 0);
     // s is the size to draw the boxes, leaving a gap of 2 on either side
-    int s = (width/puzzle.bulk)/((2*dim)+1);
+    int s = (width/(puzzle.bulk/(int)pow(3,dim-1)))/((2*dim)+1);
     
     for (int d = 1; d < dim+1; d++) {
       color c1 = puzzle.transparent;
