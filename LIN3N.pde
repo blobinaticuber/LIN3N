@@ -9,7 +9,7 @@ float clickY;
 color bg = color(64);
 Menu menu = new Menu();
 Puzzle puzzle = new Puzzle(menu.puzzleSize);
-// default puzzle is 3^2
+// default puzzle is 3^1
 
 void setup() {
   size(800, 800, P3D);

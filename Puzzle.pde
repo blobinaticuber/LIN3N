@@ -1,7 +1,7 @@
 class Puzzle {
 
   Piece[] pieces;
-  Piece[] clickedPieces = new Piece[2];
+  int[] clickedPieces = new int[2];
   int dim;
   int bulk;
   // bulk is 3^d
@@ -14,17 +14,21 @@ class Puzzle {
   color white = color(255, 255, 255);
   color yellow = color(255, 255, 0);
   color green = color(0, 255, 0);
-  color blue = color(0, 0, 255);
+  color blue = color(0, 128, 255);
   color pink = color(255, 0, 255);
   color purple = color(128, 0, 255);
   color dgrey = color(16, 16, 16);
   color seagreen = color(64, 128, 128);
   color brick = color(128, 0, 0);
   color brown = color(128, 64, 0);
+  color dgreen = color(0,64,0);
+  color dblue = color(0,0,128);
+  color hotPink = color(255,0,128);
+  color dpurple = color(128,0,128);
 
 
-  color[] posColours = {red, white, green, pink, seagreen, brick, red};
-  color[] negColours = {orange, yellow, blue, purple, dgrey, brown, orange};
+  color[] posColours = {red, white, green, pink, seagreen, brick, dgreen, hotPink};
+  color[] negColours = {orange, yellow, blue, purple, dgrey, brown, dblue, dpurple};
 
 
 
@@ -38,6 +42,9 @@ class Puzzle {
     bulk = (int)pow(3, dim);
 
     pieces = new Piece[bulk];
+    
+    clickedPieces = new int[] {-1,-1};
+    println("clicked " + clickedPieces[0] + " and " + clickedPieces[1]);
 
     //p goes through all the pieces (3^d)
     for (int p = 0; p < bulk; p++) {
@@ -51,7 +58,7 @@ class Puzzle {
       }
       //printArray(vec);
       //print("\n");
-      pieces[p] = new Piece(new NVector(vec), p);
+      pieces[p] = new Piece(vec, p);
     }
   }
 

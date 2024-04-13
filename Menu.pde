@@ -1,6 +1,6 @@
 class Menu {
 
-  int puzzleSize = 2;
+  int puzzleSize = 1;
   int menuPanelWidth;
   int menuPanelHeight;
   
@@ -130,7 +130,7 @@ class Menu {
       puzzle = new Puzzle(puzzleSize);
       //println("decrease size");
     }
-    if (dimIncrease.clicked(x, y) && puzzle.dim<7) {
+    if (dimIncrease.clicked(x, y) && puzzle.dim<8) {
       puzzleSize++;
       puzzle = new Puzzle(puzzleSize);
       //println("increase size");

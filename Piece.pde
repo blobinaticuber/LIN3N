@@ -4,12 +4,16 @@ class Piece {
   boolean wasClicked;
   int xStickerCenterCoordinate;
 
-  //Matrix orientation = new Matrix
-  NVector position;
+  NMatrix orientation;
+  int[] vec_position;
 
-  Piece(NVector p, int idx) {
-    position = p;
+  Piece(int[] p, int idx) {
+    vec_position = new int[p.length];
+    for (int a = 0; a < p.length; a++) {
+      vec_position[a] = p[a];
+    }
     dim = p.length;
+    orientation = new NMatrix(dim);
     this.idx = idx;
   }
 
@@ -18,15 +22,23 @@ class Piece {
     rectMode(CENTER);
     strokeWeight(1);
     stroke(puzzle.black);
-    if (wasClicked) {
+    if (idx == puzzle.clickedPieces[0] || idx == puzzle.clickedPieces[1]) {
       stroke(puzzle.white);
       strokeWeight(5);
     }
-    
+
     pushMatrix();
     //translate to x sticker of piece
 
     xStickerCenterCoordinate = (width/(puzzle.bulk/(int)pow(3, dim-1)))*(idx-((puzzle.bulk-1)/2));
+    // if the x sticker of the piece would be draw offscreen, don't draw it lol
+    int xscc2 = xStickerCenterCoordinate*(int)zoomwee + (viewOffset*(int)zoomwee);
+    if (xscc2 > width/2 || xscc2 < 0-width/2) {
+      popMatrix();
+      return;
+    }
+      
+    
     //println(xStickerCenterCoordinate);
 
     translate(xStickerCenterCoordinate, 0);
@@ -37,13 +49,13 @@ class Piece {
       color c1 = puzzle.transparent;
       color c2 = puzzle.transparent;
       if (d==1) {
-        if (position.get(0)==0) fill(puzzle.transparent);
-        if (position.get(0)==1) fill(puzzle.red);
-        if (position.get(0)==-1) fill(puzzle.orange);
+        if (vec_position[0]==0) fill(puzzle.transparent);
+        if (vec_position[0]==1) fill(puzzle.red);
+        if (vec_position[0]==-1) fill(puzzle.orange);
         rect(0, 0, s, s);
       } else {
-        if (position.get(d-1)==1) c1 = puzzle.posColours[d-1];
-        else if (position.get(d-1)==-1) c2 = puzzle.negColours[d-1];
+        if (vec_position[d-1]==1) c1 = puzzle.posColours[d-1];
+        else if (vec_position[d-1]==-1) c2 = puzzle.negColours[d-1];
         // draw 2 squares for the + and - axis stickers
         fill(c1);
         rect(s*(d-1), 0, s, s);
@@ -61,16 +73,29 @@ class Piece {
   int getC() {
     int r = 0;
     for (int a = 0; a < dim; a++) {
-      r += abs(position.get(a));
+      r += abs(vec_position[a]);
     }
     return r;
+  }
+
+  int[] getPos() {
+    return orientation.multiply(vec_position);
   }
 
   boolean clickCheck(float clickX, float clickY) {
     int s = (width/(puzzle.bulk/(int)pow(3, dim-1)))/((2*dim)+1);
     if (clickX < xStickerCenterCoordinate+(s/2) && clickX > xStickerCenterCoordinate-(s/2)) {
       if (clickY < (s/2) && clickY > (-1)*(s/2)) {
-        puzzle.clickedPieces[0] = this;
+        if (puzzle.clickedPieces[0] > -1 && puzzle.clickedPieces[1] > -1) {
+          puzzle.clickedPieces[0] = -1;
+          puzzle.clickedPieces[1] = -1;
+        } else if (puzzle.clickedPieces[0] == -1) {
+          puzzle.clickedPieces[0] = idx;
+        } else if (puzzle.clickedPieces[0] > -1 && puzzle.clickedPieces[1] == -1){
+          puzzle.clickedPieces[1] = idx;
+        }
+         
+        println("clicked " + puzzle.clickedPieces[0] + " and " + puzzle.clickedPieces[1]);
         wasClicked = true;
         return true;
       }
