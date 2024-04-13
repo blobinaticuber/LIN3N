@@ -22,17 +22,20 @@ class Piece {
     rectMode(CENTER);
     strokeWeight(1);
     stroke(puzzle.black);
-    if (idx == puzzle.clickedPieces[0] || idx == puzzle.clickedPieces[1]) {
-      stroke(puzzle.white);
-      strokeWeight(5);
-    }
+    //if (idx == puzzle.clickedPieces[0] || idx == puzzle.clickedPieces[1]) {
+    //  stroke(puzzle.white);
+    //  strokeWeight(5);
+    //}
 
     pushMatrix();
     //translate to x sticker of piece
 
     xStickerCenterCoordinate = (width/(puzzle.bulk/(int)pow(3, dim-1)))*(idx-((puzzle.bulk-1)/2));
     // if the x sticker of the piece would be draw offscreen, don't draw it lol
-    int xscc2 = xStickerCenterCoordinate*(int)zoomwee + (viewOffset*(int)zoomwee);
+    //int xscc2 = xStickerCenterCoordinate*(int)zoomwee + (viewOffset*(int)zoomwee);
+    
+    // offscreen culling not quite working, but pretty close!
+    int xscc2 = (int)zoomwee*(xStickerCenterCoordinate+viewOffset);
     if (xscc2 > width/2 || xscc2 < 0-width/2) {
       popMatrix();
       return;
@@ -83,19 +86,24 @@ class Piece {
   }
 
   boolean clickCheck(float clickX, float clickY) {
+    // s is the size of the sticker rects of each piece
     int s = (width/(puzzle.bulk/(int)pow(3, dim-1)))/((2*dim)+1);
     if (clickX < xStickerCenterCoordinate+(s/2) && clickX > xStickerCenterCoordinate-(s/2)) {
       if (clickY < (s/2) && clickY > (-1)*(s/2)) {
-        if (puzzle.clickedPieces[0] > -1 && puzzle.clickedPieces[1] > -1) {
-          puzzle.clickedPieces[0] = -1;
-          puzzle.clickedPieces[1] = -1;
-        } else if (puzzle.clickedPieces[0] == -1) {
-          puzzle.clickedPieces[0] = idx;
-        } else if (puzzle.clickedPieces[0] > -1 && puzzle.clickedPieces[1] == -1){
-          puzzle.clickedPieces[1] = idx;
-        }
+        // bad code to add what piece you clicked on to a list
+        // will redo this, but using clickBuffer[] later!!
+        
+        //if (puzzle.clickedPieces[0] > -1 && puzzle.clickedPieces[1] > -1) {
+        //  puzzle.clickedPieces[0] = -1;
+        //  puzzle.clickedPieces[1] = -1;
+        //} else if (puzzle.clickedPieces[0] == -1) {
+        //  puzzle.clickedPieces[0] = idx;
+        //} else if (puzzle.clickedPieces[0] > -1 && puzzle.clickedPieces[1] == -1){
+        //  puzzle.clickedPieces[1] = idx;
+        //}
          
-        println("clicked " + puzzle.clickedPieces[0] + " and " + puzzle.clickedPieces[1]);
+        //println("clicked " + puzzle.clickedPieces[0] + " and " + puzzle.clickedPieces[1]);
+        println("clicked " + puzzle.clickBuffer[0] + ", " + puzzle.clickBuffer[1] + " and " + puzzle.clickBuffer[2] + ", " + puzzle.clickBuffer[3]);
         wasClicked = true;
         return true;
       }

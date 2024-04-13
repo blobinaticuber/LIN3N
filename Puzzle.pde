@@ -1,7 +1,8 @@
 class Puzzle {
 
   Piece[] pieces;
-  int[] clickedPieces = new int[2];
+  // click buffer will be {clicked piece 1 index, sticker of piece 1 clicked, same for piece 2, etc}
+  int[] clickBuffer = new int[4];
   int dim;
   int bulk;
   // bulk is 3^d
@@ -43,8 +44,9 @@ class Puzzle {
 
     pieces = new Piece[bulk];
     
-    clickedPieces = new int[] {-1,-1};
-    println("clicked " + clickedPieces[0] + " and " + clickedPieces[1]);
+    clickBuffer = new int[] {-1,-1,-1,-1};
+    println("clicked " + clickBuffer[0] + ", " + clickBuffer[1] + " and " + clickBuffer[2] + ", " + clickBuffer[3]);
+    
 
     //p goes through all the pieces (3^d)
     for (int p = 0; p < bulk; p++) {
