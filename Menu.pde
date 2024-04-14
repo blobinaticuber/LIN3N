@@ -132,9 +132,9 @@ class Menu {
     for (int c = 0; c < puzzle.dim; c++) {
       int cl = puzzle.dim;
       fill(posColours[c]);
-      rect(2*width/3 + (c*width/3/cl), 100, width/3/cl, height/3/cl);
+      rect(2*width/3 + (c*width/3/cl), height/3/2, width/3/cl, height/3/2/2);
       fill(negColours[c]);
-      rect(2*width/3 + (c*width/3/cl), 200, width/3/cl, height/3/cl);
+      rect(2*width/3 + (c*width/3/cl), height/3/2+height/3/2/2, width/3/cl, height/3/2/2);
     }
   }
 
@@ -164,6 +164,11 @@ class Menu {
 
     fill(progressBarRightColour);
     rect(width/3 + width/3/2, 2*height/3 + 70, (width/3 - 2*width/3/8)/2, 20);
+
+
+    fill(255, 255, 255);
+    textSize(20);
+    text("Solved pieces: " + puzzle.bulk, width/3 + 10, 2*height/3 + height/3/2);
   }
 
   void drawControlsMenu() {
@@ -190,12 +195,14 @@ class Menu {
     if (dimDecrease.clicked(x, y) && puzzle.dim>1) {
       puzzleSize--;
       puzzle = new Puzzle(puzzleSize);
-      //println("decrease size");
+      progressBarLeftColour = transparent;
+      progressBarRightColour = transparent;
     }
     if (dimIncrease.clicked(x, y) && puzzle.dim<8) {
       puzzleSize++;
       puzzle = new Puzzle(puzzleSize);
-      //println("increase size");
+      progressBarLeftColour = transparent;
+      progressBarRightColour = transparent;
     }
   }
 

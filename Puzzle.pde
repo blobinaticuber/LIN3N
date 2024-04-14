@@ -23,7 +23,7 @@ class Puzzle {
 
     // WARNING - it doensn't like this fsr. NullPointerException
     //resetClickBuffer();
-    //clickBuffer = new int[] {-1, -1, -1, -1};
+    clickBuffer = new int[] {-1, -1, -1, -1};
     //menu.progressBarLeftColour = menu.transparent;
     //menu.progressBarRightColour = menu.transparent;
     
