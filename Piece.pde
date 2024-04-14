@@ -3,6 +3,10 @@ class Piece {
   int idx;
   boolean wasClicked;
   int xStickerCenterCoordinate;
+  // s is the size to draw the boxes, leaving a gap of 2 on either side
+  int s;
+  int pieceLeftmostCoordinate;
+  int pieceRightmostCoordinate;
 
   NMatrix orientation;
   int[] vec_position;
@@ -16,6 +20,12 @@ class Piece {
     orientation = new NMatrix(dim);
     this.idx = idx;
     wasClicked = false;
+    
+    s = (width/((int)pow(3,dim)/(int)pow(3, dim-1)))/((2*dim)+1);
+    xStickerCenterCoordinate = (width/((int)pow(3,dim)/(int)pow(3, dim-1)))*(idx-(((int)pow(3,dim)-1)/2));
+    pieceLeftmostCoordinate = (xStickerCenterCoordinate+(s/2))+(s*(dim-1));
+    pieceRightmostCoordinate = (xStickerCenterCoordinate-(s/2))-(s*(dim-1));
+    
   }
 
   // draw ALL of the sticker of the piece
@@ -30,25 +40,18 @@ class Piece {
     }
 
     pushMatrix();
-    //translate to x sticker of piece
 
-    xStickerCenterCoordinate = (width/(menu.puzzle.bulk/(int)pow(3, dim-1)))*(idx-((menu.puzzle.bulk-1)/2));
     // if the x sticker of the piece would be draw offscreen, don't draw it lol
-    //int xscc2 = xStickerCenterCoordinate*(int)zoomwee + (viewOffset*(int)zoomwee);
-
     // offscreen culling not quite working, but pretty close!
-    int xscc2 = (int)zoomwee*(xStickerCenterCoordinate+viewOffset);
-    if (xscc2 > width/2 || xscc2 < 0-width/2) {
+    if (abs(zoomwee)*(pieceLeftmostCoordinate+viewOffset) > abs(zoomwee)*((width/2)+viewOffset) || abs(zoomwee)*(pieceRightmostCoordinate+viewOffset) < abs(zoomwee)*((-1*(width/2)+viewOffset))) {
       popMatrix();
       return;
     }
 
 
-    //println(xStickerCenterCoordinate);
-
+    //translate to x sticker of piece
     translate(xStickerCenterCoordinate, 0);
-    // s is the size to draw the boxes, leaving a gap of 2 on either side
-    int s = (width/(menu.puzzle.bulk/(int)pow(3, dim-1)))/((2*dim)+1);
+
 
     for (int d = 1; d < dim+1; d++) {
       color c1 = menu.transparent;
@@ -89,9 +92,8 @@ class Piece {
 
   // changes wasClicked to true if the piece was clicked on
   boolean clickCheck(float clickX, float clickY) {
-    // s is the size of the sticker rects of each piece
-    int s = (width/(menu.puzzle.bulk/(int)pow(3, dim-1)))/((2*dim)+1);
-    if (clickX < (xStickerCenterCoordinate+(s/2))+(s*(dim-1)) && clickX > (xStickerCenterCoordinate-(s/2))-(s*(dim-1))) {
+    
+    if (clickX < pieceLeftmostCoordinate && clickX > pieceRightmostCoordinate) {
       if (clickY < (s/2) && clickY > (-1)*(s/2)) {
         menu.puzzle.updateClickBuffer(idx);
         println("clicked " + menu.puzzle.clickBuffer[0] + ", " + menu.puzzle.clickBuffer[1] + " and " + menu.puzzle.clickBuffer[2] + ", " + menu.puzzle.clickBuffer[3]);

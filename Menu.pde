@@ -63,6 +63,7 @@ class Menu {
     // translate to where the mouse is, zoom in centered on that
     //translate(mouseX,0);
     scale(abs(zoomwee));
+    //scale(abs(zoomwee),1); // this keeps the y-axis the same height, cool squish effect
     //translate(-1*mouseX,0);
     // undo the mouse translation
     puzzle.draw();
