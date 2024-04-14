@@ -84,6 +84,7 @@ class Puzzle {
 
     // if the clickBuffer has something other than -1's in it
     // we'll assume that the first two indices of clickBuffer are a piece
+    // also if you click on the same piece twice, that should stay in 1st buffer
     if (!clickBufferEmpty()) {
       if (pieces[idx].getC() ==2) {
         clickBuffer[2] = idx;

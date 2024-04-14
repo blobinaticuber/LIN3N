@@ -21,17 +21,19 @@ class Menu {
   color pink = color(255, 0, 255);
   color purple = color(128, 0, 255);
   color dgrey = color(16, 16, 16);
-  color seagreen = color(64, 128, 128);
+  color seagreen = color(32, 64, 64);
   color brick = color(128, 0, 0);
   color brown = color(128, 64, 0);
   color dgreen = color(0, 64, 0);
   color dblue = color(0, 0, 128);
   color hotPink = color(255, 0, 128);
   color dpurple = color(128, 0, 128);
+  color olive = color(128 ,128, 0);
+  color navajoWhite = color(255, 222, 173);
 
 
-  color[] posColours = {red, white, green, pink, seagreen, brick, dgreen, hotPink};
-  color[] negColours = {orange, yellow, blue, purple, dgrey, brown, dblue, dpurple};
+  color[] posColours = {red, white, green, pink, seagreen, brick, dgreen, hotPink, olive};
+  color[] negColours = {orange, yellow, blue, purple, dgrey, brown, dblue, dpurple, navajoWhite};
 
 
   Button dimDecrease;
@@ -198,7 +200,7 @@ class Menu {
       progressBarLeftColour = transparent;
       progressBarRightColour = transparent;
     }
-    if (dimIncrease.clicked(x, y) && puzzle.dim<8) {
+    if (dimIncrease.clicked(x, y) && puzzle.dim<9) {
       puzzleSize++;
       puzzle = new Puzzle(puzzleSize);
       progressBarLeftColour = transparent;
