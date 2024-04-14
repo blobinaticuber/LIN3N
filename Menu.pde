@@ -3,26 +3,69 @@ class Menu {
   int puzzleSize = 1;
   int menuPanelWidth;
   int menuPanelHeight;
-  
+
   int buttonWidth;
   int buttonHeight;
-  
+
+  color progressBarLeftColour;
+  color progressBarRightColour;
+  color black = color(0, 0, 0);
+  color transparent = color(255, 255, 255, 0);
+
+  color red = color(255, 0, 0);
+  color orange = color(255, 128, 0);
+  color white = color(255, 255, 255);
+  color yellow = color(255, 255, 0);
+  color green = color(0, 255, 0);
+  color blue = color(0, 128, 255);
+  color pink = color(255, 0, 255);
+  color purple = color(128, 0, 255);
+  color dgrey = color(16, 16, 16);
+  color seagreen = color(64, 128, 128);
+  color brick = color(128, 0, 0);
+  color brown = color(128, 64, 0);
+  color dgreen = color(0, 64, 0);
+  color dblue = color(0, 0, 128);
+  color hotPink = color(255, 0, 128);
+  color dpurple = color(128, 0, 128);
+
+
+  color[] posColours = {red, white, green, pink, seagreen, brick, dgreen, hotPink};
+  color[] negColours = {orange, yellow, blue, purple, dgrey, brown, dblue, dpurple};
+
+
   Button dimDecrease;
   Button dimIncrease;
 
+  Puzzle puzzle = new Puzzle(puzzleSize);
+
   Menu() {
+
     menuPanelWidth = width/3;
     menuPanelHeight = height/3;
     buttonWidth = menuPanelWidth/2;
     buttonHeight = menuPanelHeight/2;
+    progressBarLeftColour = transparent;
+    progressBarRightColour = transparent;
   }
 
 
 
-  
+
 
 
   void draw() {
+    pushMatrix();
+    // translate the puzzle to the center of the screen, plus the offset
+    translate(width/2+viewOffset, height/2);
+    // translate to where the mouse is, zoom in centered on that
+    //translate(mouseX,0);
+    scale(abs(zoomwee));
+    //translate(-1*mouseX,0);
+    // undo the mouse translation
+    puzzle.draw();
+    popMatrix();
+
     menuPanelWidth = width/3;
     menuPanelHeight = height/3;
     buttonWidth = menuPanelWidth/2;
@@ -48,7 +91,7 @@ class Menu {
     fill(255, 255, 255);
     textSize(48);
     text("Puzzle", 10, 48);
-    text("3^"+puzzle.dim, 10, 100);
+    text("3^" + puzzleSize, 10, 100);
     dimDecrease = new Button(color(48), 0, buttonHeight, buttonWidth, buttonHeight);
     dimDecrease.draw();
     dimIncrease = new Button(color(48), buttonWidth, buttonHeight, buttonWidth, buttonHeight);
@@ -86,11 +129,11 @@ class Menu {
     text("Colours", 10+(2*width/3), 48);
 
     // refactor later to make the boxes uniform
-    for (int c = 0; c < puzzle.posColours.length; c++) {
-      int cl = puzzle.posColours.length;
-      fill(puzzle.posColours[c]);
+    for (int c = 0; c < puzzle.dim; c++) {
+      int cl = puzzle.dim;
+      fill(posColours[c]);
       rect(2*width/3 + (c*width/3/cl), 100, width/3/cl, height/3/cl);
-      fill(puzzle.negColours[c]);
+      fill(negColours[c]);
       rect(2*width/3 + (c*width/3/cl), 200, width/3/cl, height/3/cl);
     }
   }
@@ -112,6 +155,15 @@ class Menu {
     fill(255, 255, 255);
     textSize(48);
     text("Progress", width/3 + 10, 2*height/3 + 48);
+    // click progress bar
+    fill(transparent);
+    rect(width/3 + width/3/8, 2*height/3 + 70, width/3 - 2*width/3/8, 20);
+
+    fill(progressBarLeftColour);
+    rect(width/3 + width/3/8, 2*height/3 + 70, (width/3 - 2*width/3/8)/2, 20);
+
+    fill(progressBarRightColour);
+    rect(width/3 + width/3/2, 2*height/3 + 70, (width/3 - 2*width/3/8)/2, 20);
   }
 
   void drawControlsMenu() {
@@ -125,6 +177,16 @@ class Menu {
 
 
   void handleClicks(float x, float y) {
+
+    // piece clicking stuff
+    clickX = ((mouseX-width/2)/zoomwee)-(viewOffset/zoomwee);
+    clickY = ((mouseY-height/2)/zoomwee);
+    for (Piece p : puzzle.pieces) {
+      if (p.clickCheck(clickX, clickY)) println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
+    }
+
+
+
     if (dimDecrease.clicked(x, y) && puzzle.dim>1) {
       puzzleSize--;
       puzzle = new Puzzle(puzzleSize);

@@ -7,30 +7,7 @@ class Puzzle {
   int bulk;
   // bulk is 3^d
 
-  color black = color(0, 0, 0);
-  color transparent = color(255, 255, 255, 0);
-
-  color red = color(255, 0, 0);
-  color orange = color(255, 128, 0);
-  color white = color(255, 255, 255);
-  color yellow = color(255, 255, 0);
-  color green = color(0, 255, 0);
-  color blue = color(0, 128, 255);
-  color pink = color(255, 0, 255);
-  color purple = color(128, 0, 255);
-  color dgrey = color(16, 16, 16);
-  color seagreen = color(64, 128, 128);
-  color brick = color(128, 0, 0);
-  color brown = color(128, 64, 0);
-  color dgreen = color(0,64,0);
-  color dblue = color(0,0,128);
-  color hotPink = color(255,0,128);
-  color dpurple = color(128,0,128);
-
-
-  color[] posColours = {red, white, green, pink, seagreen, brick, dgreen, hotPink};
-  color[] negColours = {orange, yellow, blue, purple, dgrey, brown, dblue, dpurple};
-
+  
 
 
   Puzzle(int d) {
@@ -43,10 +20,15 @@ class Puzzle {
     bulk = (int)pow(3, dim);
 
     pieces = new Piece[bulk];
+
+    // WARNING - it doensn't like this fsr. NullPointerException
+    //resetClickBuffer();
+    //clickBuffer = new int[] {-1, -1, -1, -1};
+    //menu.progressBarLeftColour = menu.transparent;
+    //menu.progressBarRightColour = menu.transparent;
     
-    clickBuffer = new int[] {-1,-1,-1,-1};
     println("clicked " + clickBuffer[0] + ", " + clickBuffer[1] + " and " + clickBuffer[2] + ", " + clickBuffer[3]);
-    
+
 
     //p goes through all the pieces (3^d)
     for (int p = 0; p < bulk; p++) {
@@ -71,5 +53,53 @@ class Puzzle {
     }
     //pieces[].draw();
     // for debugging certain pieces, put the index of the piece
+  }
+
+
+  boolean clickBufferEmpty() {
+    return (clickBuffer[0] == -1 && clickBuffer[1] == -1 && clickBuffer[2] == -1 && clickBuffer[3] == -1);
+  }
+
+  boolean clickBufferFull() {
+    return (clickBuffer[0] != -1 && clickBuffer[1] != -1 && clickBuffer[2] != -1 && clickBuffer[3] != -1);
+  }
+
+  void resetClickBuffer() {
+    menu.progressBarLeftColour = menu.transparent;
+    menu.progressBarRightColour = menu.transparent;
+    clickBuffer = new int[] {-1, -1, -1, -1};
+  }
+
+  void updateClickBuffer(int idx) {
+    // I also have to make it bad if the 2nd one in the buffer
+    // is not an adjacent 2c on the same side as the first.
+    // for right now, it just detects if they're both 2c pieces...
+    
+    
+    if (clickBufferFull()) {
+      // do the appropriate twist, then reset buffer
+      resetClickBuffer();
+      return;
+    }
+
+    // if the clickBuffer has something other than -1's in it
+    // we'll assume that the first two indices of clickBuffer are a piece
+    if (!clickBufferEmpty()) {
+      if (pieces[idx].getC() ==2) {
+        clickBuffer[2] = idx;
+        // also add the sticker clicked to clickBuffer[3];
+        menu.progressBarRightColour = menu.green;
+      } else {
+        menu.progressBarRightColour = menu.red;
+      }
+    } else {
+      if (pieces[idx].getC() ==2) {
+        clickBuffer[0] = idx;
+        // also add the sticker clicked to clickBuffer[1];
+        menu.progressBarLeftColour = menu.green;
+      } else {
+        menu.progressBarLeftColour = menu.red;
+      }
+    }
   }
 }

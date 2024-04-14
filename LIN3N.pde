@@ -7,28 +7,20 @@ float zoomwee = 1.0;
 float clickX;
 float clickY;
 color bg = color(64);
-Menu menu = new Menu();
-Puzzle puzzle = new Puzzle(menu.puzzleSize);
+
+
+Menu menu;
 // default puzzle is 3^1
 
 void setup() {
   size(800, 800, P3D);
   surface.setLocation(100, 100);
+  menu = new Menu();
 }
 
 
 void draw() {
   background(bg);
-  pushMatrix();
-  // translate the puzzle to the center of the screen, plus the offset
-  translate(width/2+viewOffset, height/2);
-  // translate to where the mouse is, zoom in centered on that
-  //translate(mouseX,0);
-  scale(abs(zoomwee));
-  //translate(-1*mouseX,0);
-  // undo the mouse translation
-  puzzle.draw();
-  popMatrix();
   menu.draw();
 }
 
@@ -52,11 +44,4 @@ void mouseDragged() {
 void mousePressed() {
   // Menu stuff
   menu.handleClicks(mouseX, mouseY);
-
-  // piece clicking stuff
-  clickX = ((mouseX-width/2)/zoomwee)-(viewOffset/zoomwee);
-  clickY = ((mouseY-height/2)/zoomwee);
-  for (Piece p : puzzle.pieces) {
-    if (p.clickCheck(clickX, clickY)) println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
-  }
 }
