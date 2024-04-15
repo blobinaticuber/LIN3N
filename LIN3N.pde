@@ -4,13 +4,7 @@
 
 int viewOffset = 0;
 float zoomwee = 1.0;
-float clickX;
-float clickY;
-color bg = color(64);
-
-
 Menu menu;
-// default puzzle is 3^1
 
 void setup() {
   size(800, 800, P3D);
@@ -20,7 +14,7 @@ void setup() {
 
 
 void draw() {
-  background(bg);
+  background(menu.bgColour);
   menu.draw();
 }
 

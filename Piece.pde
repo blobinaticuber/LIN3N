@@ -34,6 +34,7 @@ class Piece {
     strokeWeight(1);
     stroke(menu.black);
 
+    // if the piece is in the clickBuffer, draw it with a bigger outline
     if (menu.puzzle.clickBuffer[0] == idx || menu.puzzle.clickBuffer[2] == idx) {
       stroke(menu.white);
       strokeWeight(5);
@@ -43,10 +44,10 @@ class Piece {
 
     // if the x sticker of the piece would be draw offscreen, don't draw it lol
     // offscreen culling not quite working, but pretty close!
-    if (abs(zoomwee)*(pieceLeftmostCoordinate+viewOffset) > abs(zoomwee)*((width/2)+viewOffset) || abs(zoomwee)*(pieceRightmostCoordinate+viewOffset) < abs(zoomwee)*((-1*(width/2)+viewOffset))) {
-      popMatrix();
-      return;
-    }
+    //if (abs(zoomwee)*(pieceLeftmostCoordinate+viewOffset) > abs(zoomwee)*((width/2)+viewOffset) || abs(zoomwee)*(pieceRightmostCoordinate+viewOffset) < abs(zoomwee)*((-1*(width/2)+viewOffset))) {
+    //  popMatrix();
+    //  return;
+    //}
 
 
     //translate to x sticker of piece

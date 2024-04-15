@@ -1,16 +1,22 @@
 class Menu {
 
   int puzzleSize = 1;
+  int puzzleSizeMin = 1;
+  int puzzleSizeMax = 9;
+  
   int menuPanelWidth;
   int menuPanelHeight;
 
-  int buttonWidth;
-  int buttonHeight;
+  Button dimDecrease;
+  Button dimIncrease;
 
   color progressBarLeftColour;
   color progressBarRightColour;
   color black = color(0, 0, 0);
   color transparent = color(255, 255, 255, 0);
+  color buttonColour = color(48);
+  color bgColour = color(64);
+  color menuPanelColour = color(32);
 
   color red = color(255, 0, 0);
   color orange = color(255, 128, 0);
@@ -36,24 +42,21 @@ class Menu {
   color[] negColours = {orange, yellow, blue, purple, dgrey, brown, dblue, dpurple, navajoWhite};
 
 
-  Button dimDecrease;
-  Button dimIncrease;
 
   Puzzle puzzle = new Puzzle(puzzleSize);
 
   Menu() {
-
     menuPanelWidth = width/3;
     menuPanelHeight = height/3;
-    buttonWidth = menuPanelWidth/2;
-    buttonHeight = menuPanelHeight/2;
-    progressBarLeftColour = transparent;
-    progressBarRightColour = transparent;
+    progressBarReset();
   }
 
 
 
-
+  void progressBarReset() {
+    progressBarLeftColour = transparent;
+    progressBarRightColour = transparent;
+  }
 
 
   void draw() {
@@ -71,8 +74,7 @@ class Menu {
 
     menuPanelWidth = width/3;
     menuPanelHeight = height/3;
-    buttonWidth = menuPanelWidth/2;
-    buttonHeight = menuPanelHeight/2;
+    
     strokeWeight(5);
     pushMatrix();
     translate(0, 0);
@@ -88,16 +90,19 @@ class Menu {
   }
 
   void drawPuzzleMenu() {
-    fill(32, 32, 32);
+    fill(menuPanelColour);
     rectMode(CORNER);
     rect(0, 0, menuPanelWidth, menuPanelHeight);
     fill(255, 255, 255);
     textSize(48);
     text("Puzzle", 10, 48);
     text("3^" + puzzleSize, 10, 100);
-    dimDecrease = new Button(color(48), 0, buttonHeight, buttonWidth, buttonHeight);
+    
+    int buttonWidth = menuPanelWidth/2;
+    int buttonHeight = menuPanelHeight/2;
+    dimDecrease = new Button(buttonColour, 0, buttonHeight, buttonWidth, buttonHeight);
     dimDecrease.draw();
-    dimIncrease = new Button(color(48), buttonWidth, buttonHeight, buttonWidth, buttonHeight);
+    dimIncrease = new Button(buttonColour, buttonWidth, buttonHeight, buttonWidth, buttonHeight);
     dimIncrease.draw();
     // minus symbol on top of dimDecrease button
     stroke(255);
@@ -112,21 +117,22 @@ class Menu {
 
 
   void drawStatsMenu() {
-    fill(32, 32, 32);
+    fill(menuPanelColour);
     rectMode(CORNER);
-    rect(width/3, 0, width/3, height/3);
+    rect(width/3, 0, menuPanelWidth, menuPanelHeight);
     fill(255, 255, 255);
     textSize(48);
     text("Stats", 10+(width/3), 48);
+    // also only start the timer after a twist
     // if puzzle becomes solved, stop the timer lol
     text("time: " + (millis()/1000.0), 10+width/3, 100);
     text("twists: 0", 10+width/3, 200);
   }
 
   void drawColourMenu() {
-    fill(32, 32, 32);
+    fill(menuPanelColour);
     rectMode(CORNER);
-    rect(2*width/3, 0, width/3, height/3);
+    rect(2*width/3, 0, menuPanelWidth, menuPanelHeight);
     fill(255, 255, 255);
     textSize(48);
     text("Colours", 10+(2*width/3), 48);
@@ -143,18 +149,18 @@ class Menu {
 
 
   void drawFiltersMenu() {
-    fill(32, 32, 32);
+    fill(menuPanelColour);
     rectMode(CORNER);
-    rect(0, 2*height/3, width/3, height/3);
+    rect(0, 2*height/3, menuPanelWidth, menuPanelHeight);
     fill(255, 255, 255);
     textSize(48);
     text("Filters", 10, 2*height/3 + 48);
   }
 
   void drawProgressMenu() {
-    fill(32, 32, 32);
+    fill(menuPanelColour);
     rectMode(CORNER);
-    rect(width/3, 2*height/3, width/3, height/3);
+    rect(width/3, 2*height/3, menuPanelWidth, menuPanelHeight);
     fill(255, 255, 255);
     textSize(48);
     text("Progress", width/3 + 10, 2*height/3 + 48);
@@ -175,9 +181,9 @@ class Menu {
   }
 
   void drawControlsMenu() {
-    fill(32, 32, 32);
+    fill(menuPanelColour);
     rectMode(CORNER);
-    rect(2*width/3, 2*height/3, width/3, height/3);
+    rect(2*width/3, 2*height/3, menuPanelWidth, menuPanelHeight);
     fill(255, 255, 255);
     textSize(48);
     text("Controls", 2*width/3 + 10, 2*height/3 + 48);
@@ -185,31 +191,24 @@ class Menu {
 
 
   void handleClicks(float x, float y) {
-
     // piece clicking stuff
-    clickX = ((mouseX-width/2)/zoomwee)-(viewOffset/zoomwee);
-    clickY = ((mouseY-height/2)/zoomwee);
+    float clickX = ((mouseX-width/2)/zoomwee)-(viewOffset/zoomwee);
+    float clickY = ((mouseY-height/2)/zoomwee);
     for (Piece p : puzzle.pieces) {
       if (p.clickCheck(clickX, clickY)) println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
     }
 
 
 
-    if (dimDecrease.clicked(x, y) && puzzle.dim>1) {
+    if (dimDecrease.clicked(x, y) && puzzle.dim>puzzleSizeMin) {
       puzzleSize--;
       puzzle = new Puzzle(puzzleSize);
-      progressBarLeftColour = transparent;
-      progressBarRightColour = transparent;
+      progressBarReset();
     }
-    if (dimIncrease.clicked(x, y) && puzzle.dim<9) {
+    if (dimIncrease.clicked(x, y) && puzzle.dim<puzzleSizeMax) {
       puzzleSize++;
       puzzle = new Puzzle(puzzleSize);
-      progressBarLeftColour = transparent;
-      progressBarRightColour = transparent;
+      progressBarReset();
     }
-  }
-
-  boolean puzzleMenuClicked(float x, float y) {
-    return (x > 0 && x < width/3 && y > 0 && y < height/3);
   }
 }
