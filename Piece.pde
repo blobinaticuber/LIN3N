@@ -18,12 +18,11 @@ class Piece {
     dim = p.length;
     //orientation = new NMatrix(dim);
     this.idx = idx;
-    
-    s = (width/((int)pow(3,dim)/(int)pow(3, dim-1)))/((2*dim)+1);
-    xStickerCenterCoordinate = (width/((int)pow(3,dim)/(int)pow(3, dim-1)))*(idx-(((int)pow(3,dim)-1)/2));
+
+    s = (width/((int)pow(3, dim)/(int)pow(3, dim-1)))/((2*dim)+1);
+    xStickerCenterCoordinate = (width/((int)pow(3, dim)/(int)pow(3, dim-1)))*(idx-(((int)pow(3, dim)-1)/2));
     pieceLeftmostCoordinate = (xStickerCenterCoordinate+(s/2))+(s*(dim-1));
     pieceRightmostCoordinate = (xStickerCenterCoordinate-(s/2))-(s*(dim-1));
-    
   }
 
   // draw ALL of the sticker of the piece
@@ -91,7 +90,7 @@ class Piece {
 
   // changes wasClicked to true if the piece was clicked on
   boolean clickCheck(float clickX, float clickY) {
-    
+
     if (clickX < pieceLeftmostCoordinate && clickX > pieceRightmostCoordinate) {
       if (clickY < (s/2) && clickY > (-1)*(s/2)) {
         int sticker = 0;
@@ -100,8 +99,14 @@ class Piece {
             sticker = n;
           }
         }
-        
-        
+        if (position[abs(sticker)] == (sticker>0 ? 1 : -1)) {
+          //if (position[sticker+(2*dim - 1)-2] == 1 || position[sticker+(2*dim - 1)-2] == -1) {
+          println("clicked on a real legit sticker");
+        } else {
+          println("that's not a sticker ;(");
+        }
+
+
         menu.puzzle.updateClickBuffer(idx, sticker);
         println("clicked " + menu.puzzle.clickBuffer[0] + ", " + menu.puzzle.clickBuffer[1] + " and " + menu.puzzle.clickBuffer[2] + ", " + menu.puzzle.clickBuffer[3]);
         return true;

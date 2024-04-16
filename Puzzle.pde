@@ -61,7 +61,7 @@ class Puzzle {
   }
 
   boolean clickBufferFull() {
-    return (clickBuffer[0] != -1 && clickBuffer[1] != -1 && clickBuffer[2] != -1 && clickBuffer[3] != -1);
+    return (clickBuffer[0] != -1 && clickBuffer[2] != -1);
   }
   
   boolean clickBufferHas(int idx) {

@@ -209,7 +209,7 @@ class Menu {
 
     if (puzzleSize > 2) {
       for (Piece p : puzzle.pieces) {
-        if (p.clickCheck(clickX, clickY)) println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
+        p.clickCheck(clickX, clickY); //println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
       }
     }
 
