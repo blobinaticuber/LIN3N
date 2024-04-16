@@ -7,7 +7,7 @@ class Puzzle {
   int bulk;
   // bulk is 3^d
 
-  
+
 
 
   Puzzle(int d) {
@@ -26,8 +26,8 @@ class Puzzle {
     clickBuffer = new int[] {-1, -1, -1, -1};
     //menu.progressBarLeftColour = menu.transparent;
     //menu.progressBarRightColour = menu.transparent;
-    
-    println("clicked " + clickBuffer[0] + ", " + clickBuffer[1] + " and " + clickBuffer[2] + ", " + clickBuffer[3]);
+
+    printClickBuffer();
 
 
     //p goes through all the pieces (3^d)
@@ -63,7 +63,7 @@ class Puzzle {
   boolean clickBufferFull() {
     return (clickBuffer[0] != -1 && clickBuffer[2] != -1);
   }
-  
+
   boolean clickBufferHas(int idx) {
     return (clickBuffer[0] == idx || clickBuffer[2] == idx);
   }
@@ -74,39 +74,58 @@ class Puzzle {
     clickBuffer = new int[] {-1, -1, -1, -1};
   }
 
-  void updateClickBuffer(int idx, int sticker) {
+  void printClickBuffer() {
+    println("clickBuffer: " + clickBuffer[0] + ", " + clickBuffer[1] + ", " + clickBuffer[2] + ", " + clickBuffer[3]);
+  }
+
+  void updateClickBuffer(int idx, int sticker, boolean stickerLegitimacy) {
     // I also have to make it bad if the 2nd one in the buffer
     // is not an adjacent 2c on the same side as the first.
     // for right now, it just detects if they're both 2c pieces...
     
-    
     if (clickBufferFull()) {
       // do the appropriate twist, then reset buffer
       resetClickBuffer();
+      printClickBuffer();
+      return;
+    }
+    
+    if (pieces[idx].getC() != 2) {
+      println("ERROR: cannot add non-2c piece to clickBuffer");
+      printClickBuffer();
+      return;
+    }
+    if (clickBuffer[0] == idx) {
+      println("ERROR: cannot click the same piece twice");
+      printClickBuffer();
+      return;
+    }
+    if (stickerLegitimacy) {
+      println("ERROR: cannot add piece to clickBuffer because clicked sticker does not exist");
+      printClickBuffer();
+      return;
+    }
+    if (clickBufferEmpty()) {
+      clickBuffer[0] = idx;
+      clickBuffer[1] = sticker;
+      printClickBuffer();
+      menu.progressBarLeftColour = menu.green;
+      return;
+    }
+    if (clickBuffer[1] != sticker) {
+      println("Error: must click same sticker of 2nd piece as first piece");
+      menu.progressBarRightColour = menu.red;
+      return;
+    }
+    if (!clickBufferEmpty()) {
+      clickBuffer[2] = idx;
+      clickBuffer[3] = sticker;
+      printClickBuffer();
+      menu.progressBarRightColour = menu.green;
       return;
     }
 
-    // if the clickBuffer has something other than -1's in it
-    // we'll assume that the first two indices of clickBuffer are a piece
-    // also if you click on the same piece twice, that should stay in 1st buffer
-    if (!clickBufferEmpty()) {
-      if (pieces[idx].getC() ==2) {
-        clickBuffer[2] = idx;
-        clickBuffer[3] = sticker;
-        // also add the sticker clicked to clickBuffer[3];
-        menu.progressBarRightColour = menu.green;
-      } else {
-        menu.progressBarRightColour = menu.red;
-      }
-    } else {
-      if (pieces[idx].getC() ==2) {
-        clickBuffer[0] = idx;
-        clickBuffer[1] = sticker;
-        // also add the sticker clicked to clickBuffer[1];
-        menu.progressBarLeftColour = menu.green;
-      } else {
-        menu.progressBarLeftColour = menu.red;
-      }
-    }
+    
+    
   }
 }

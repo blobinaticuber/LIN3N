@@ -90,7 +90,7 @@ class Piece {
 
   // changes wasClicked to true if the piece was clicked on
   boolean clickCheck(float clickX, float clickY) {
-
+    boolean stickerLegitimacy = false;
     if (clickX < pieceLeftmostCoordinate && clickX > pieceRightmostCoordinate) {
       if (clickY < (s/2) && clickY > (-1)*(s/2)) {
         int sticker = 0;
@@ -99,16 +99,12 @@ class Piece {
             sticker = n;
           }
         }
-        if (position[abs(sticker)] == (sticker>0 ? 1 : -1)) {
-          //if (position[sticker+(2*dim - 1)-2] == 1 || position[sticker+(2*dim - 1)-2] == -1) {
-          println("clicked on a real legit sticker");
-        } else {
-          println("that's not a sticker ;(");
-        }
+
+        stickerLegitimacy = (position[abs(sticker)] != (sticker>0 ? 1 : -1));
 
 
-        menu.puzzle.updateClickBuffer(idx, sticker);
-        println("clicked " + menu.puzzle.clickBuffer[0] + ", " + menu.puzzle.clickBuffer[1] + " and " + menu.puzzle.clickBuffer[2] + ", " + menu.puzzle.clickBuffer[3]);
+        println("you clicked piece " + idx + ", sticker " + sticker);
+        menu.puzzle.updateClickBuffer(idx, sticker, stickerLegitimacy);
         return true;
       }
     }
