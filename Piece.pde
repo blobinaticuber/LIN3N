@@ -1,7 +1,6 @@
 class Piece {
   int dim;
   int idx;
-  boolean wasClicked;
   int xStickerCenterCoordinate;
   // s is the size to draw the boxes, leaving a gap of 2 on either side
   int s;
@@ -19,7 +18,6 @@ class Piece {
     dim = p.length;
     //orientation = new NMatrix(dim);
     this.idx = idx;
-    wasClicked = false;
     
     s = (width/((int)pow(3,dim)/(int)pow(3, dim-1)))/((2*dim)+1);
     xStickerCenterCoordinate = (width/((int)pow(3,dim)/(int)pow(3, dim-1)))*(idx-(((int)pow(3,dim)-1)/2));
@@ -35,7 +33,7 @@ class Piece {
     stroke(menu.black);
 
     // if the piece is in the clickBuffer, draw it with a bigger outline
-    if (menu.puzzle.clickBuffer[0] == idx || menu.puzzle.clickBuffer[2] == idx) {
+    if (menu.puzzle.clickBufferHas(idx)) {
       stroke(menu.white);
       strokeWeight(5);
     }
@@ -96,13 +94,19 @@ class Piece {
     
     if (clickX < pieceLeftmostCoordinate && clickX > pieceRightmostCoordinate) {
       if (clickY < (s/2) && clickY > (-1)*(s/2)) {
-        menu.puzzle.updateClickBuffer(idx);
+        int sticker = 0;
+        for (int n = (-1*dim); n < dim+1; n++) {
+          if (clickX < (xStickerCenterCoordinate + (n*s)) + (s/2) && clickX > (xStickerCenterCoordinate + (n*s)) - (s/2)) {
+            sticker = n;
+          }
+        }
+        
+        
+        menu.puzzle.updateClickBuffer(idx, sticker);
         println("clicked " + menu.puzzle.clickBuffer[0] + ", " + menu.puzzle.clickBuffer[1] + " and " + menu.puzzle.clickBuffer[2] + ", " + menu.puzzle.clickBuffer[3]);
-        wasClicked = true;
         return true;
       }
     }
-    wasClicked = false;
     return false;
   }
 }

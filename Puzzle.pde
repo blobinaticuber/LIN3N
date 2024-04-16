@@ -63,6 +63,10 @@ class Puzzle {
   boolean clickBufferFull() {
     return (clickBuffer[0] != -1 && clickBuffer[1] != -1 && clickBuffer[2] != -1 && clickBuffer[3] != -1);
   }
+  
+  boolean clickBufferHas(int idx) {
+    return (clickBuffer[0] == idx || clickBuffer[2] == idx);
+  }
 
   void resetClickBuffer() {
     menu.progressBarLeftColour = menu.transparent;
@@ -70,7 +74,7 @@ class Puzzle {
     clickBuffer = new int[] {-1, -1, -1, -1};
   }
 
-  void updateClickBuffer(int idx) {
+  void updateClickBuffer(int idx, int sticker) {
     // I also have to make it bad if the 2nd one in the buffer
     // is not an adjacent 2c on the same side as the first.
     // for right now, it just detects if they're both 2c pieces...
@@ -88,6 +92,7 @@ class Puzzle {
     if (!clickBufferEmpty()) {
       if (pieces[idx].getC() ==2) {
         clickBuffer[2] = idx;
+        clickBuffer[3] = sticker;
         // also add the sticker clicked to clickBuffer[3];
         menu.progressBarRightColour = menu.green;
       } else {
@@ -96,6 +101,7 @@ class Puzzle {
     } else {
       if (pieces[idx].getC() ==2) {
         clickBuffer[0] = idx;
+        clickBuffer[1] = sticker;
         // also add the sticker clicked to clickBuffer[1];
         menu.progressBarLeftColour = menu.green;
       } else {

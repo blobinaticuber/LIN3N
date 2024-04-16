@@ -9,6 +9,7 @@ class Menu {
 
   Button dimDecrease;
   Button dimIncrease;
+  Button resetClickBuffer;
 
   color progressBarLeftColour;
   color progressBarRightColour;
@@ -100,9 +101,9 @@ class Menu {
 
     int buttonWidth = menuPanelWidth/2;
     int buttonHeight = menuPanelHeight/2;
-    dimDecrease = new Button(buttonColour, 0, buttonHeight, buttonWidth, buttonHeight);
+    dimDecrease = new Button(buttonColour, 0, buttonHeight, buttonWidth, buttonHeight, 20);
     dimDecrease.draw();
-    dimIncrease = new Button(buttonColour, buttonWidth, buttonHeight, buttonWidth, buttonHeight);
+    dimIncrease = new Button(buttonColour, buttonWidth, buttonHeight, buttonWidth, buttonHeight, 20);
     dimIncrease.draw();
     // minus symbol on top of dimDecrease button
     stroke(255);
@@ -164,6 +165,17 @@ class Menu {
     fill(255, 255, 255);
     textSize(48);
     text("Progress", width/3 + 10, 2*height/3 + 48);
+    
+    // draws a little red x inside the button
+    stroke(255,0,0);
+    line(2*menuPanelWidth, 2*menuPanelHeight, (2*menuPanelWidth)-(menuPanelWidth/8), (2*menuPanelHeight)+(menuPanelHeight/8));
+    line((2*menuPanelWidth)-(menuPanelWidth/8), 2*menuPanelHeight, 2*menuPanelWidth, (2*menuPanelHeight)+(menuPanelHeight/8));
+    stroke(0);
+    int buttonH = menuPanelHeight/8;
+    int buttonW = menuPanelWidth/8;
+    resetClickBuffer = new Button(buttonColour, (2*menuPanelWidth)-(menuPanelWidth/8), 2*menuPanelHeight, buttonW, buttonH, 5);
+    resetClickBuffer.draw();
+    
     // click progress bar
     fill(transparent);
     rect(width/3 + width/3/8, 2*height/3 + 70, width/3 - 2*width/3/8, 20);
@@ -211,6 +223,10 @@ class Menu {
     if (dimIncrease.clicked(x, y) && puzzle.dim<puzzleSizeMax) {
       puzzleSize++;
       puzzle = new Puzzle(puzzleSize);
+      progressBarReset();
+    }
+    if (resetClickBuffer.clicked(x, y)) {
+      puzzle.resetClickBuffer();
       progressBarReset();
     }
   }

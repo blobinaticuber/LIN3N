@@ -11,17 +11,6 @@ void setup() {
   size(800, 800, P3D);
   surface.setLocation(100, 100);
   menu = new Menu();
-  
-  int[][] test = {
-    {1,0},
-    {0,1}
-  };
-  int[][] test2 = {
-    {2,2},
-    {2,2}
-  };
-  matrixHelper.printMatrix(matrixHelper.multiply(test,test2));
-  
 }
 
 
