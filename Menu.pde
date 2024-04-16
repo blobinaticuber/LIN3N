@@ -3,7 +3,7 @@ class Menu {
   int puzzleSize = 1;
   int puzzleSizeMin = 1;
   int puzzleSizeMax = 9;
-  
+
   int menuPanelWidth;
   int menuPanelHeight;
 
@@ -34,7 +34,7 @@ class Menu {
   color dblue = color(0, 0, 128);
   color hotPink = color(255, 0, 128);
   color dpurple = color(128, 0, 128);
-  color olive = color(128 ,128, 0);
+  color olive = color(128, 128, 0);
   color navajoWhite = color(255, 222, 173);
 
 
@@ -74,7 +74,7 @@ class Menu {
 
     menuPanelWidth = width/3;
     menuPanelHeight = height/3;
-    
+
     strokeWeight(5);
     pushMatrix();
     translate(0, 0);
@@ -97,7 +97,7 @@ class Menu {
     textSize(48);
     text("Puzzle", 10, 48);
     text("3^" + puzzleSize, 10, 100);
-    
+
     int buttonWidth = menuPanelWidth/2;
     int buttonHeight = menuPanelHeight/2;
     dimDecrease = new Button(buttonColour, 0, buttonHeight, buttonWidth, buttonHeight);
@@ -194,8 +194,11 @@ class Menu {
     // piece clicking stuff
     float clickX = ((mouseX-width/2)/zoomwee)-(viewOffset/zoomwee);
     float clickY = ((mouseY-height/2)/zoomwee);
-    for (Piece p : puzzle.pieces) {
-      if (p.clickCheck(clickX, clickY)) println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
+
+    if (puzzleSize > 2) {
+      for (Piece p : puzzle.pieces) {
+        if (p.clickCheck(clickX, clickY)) println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
+      }
     }
 
 

@@ -8,16 +8,16 @@ class Piece {
   int pieceLeftmostCoordinate;
   int pieceRightmostCoordinate;
 
-  NMatrix orientation;
-  int[] vec_position;
+  //NMatrix orientation;
+  int[] position;
 
   Piece(int[] p, int idx) {
-    vec_position = new int[p.length];
+    position = new int[p.length];
     for (int a = 0; a < p.length; a++) {
-      vec_position[a] = p[a];
+      position[a] = p[a];
     }
     dim = p.length;
-    orientation = new NMatrix(dim);
+    //orientation = new NMatrix(dim);
     this.idx = idx;
     wasClicked = false;
     
@@ -58,13 +58,13 @@ class Piece {
       color c1 = menu.transparent;
       color c2 = menu.transparent;
       if (d==1) {
-        if (vec_position[0]==0) fill(menu.transparent);
-        if (vec_position[0]==1) fill(menu.red);
-        if (vec_position[0]==-1) fill(menu.orange);
+        if (position[0]==0) fill(menu.transparent);
+        if (position[0]==1) fill(menu.red);
+        if (position[0]==-1) fill(menu.orange);
         rect(0, 0, s, s);
       } else {
-        if (vec_position[d-1]==1) c1 = menu.posColours[d-1];
-        else if (vec_position[d-1]==-1) c2 = menu.negColours[d-1];
+        if (position[d-1]==1) c1 = menu.posColours[d-1];
+        else if (position[d-1]==-1) c2 = menu.negColours[d-1];
         // draw 2 squares for the + and - axis stickers
         fill(c1);
         rect(s*(d-1), 0, s, s);
@@ -82,14 +82,14 @@ class Piece {
   int getC() {
     int r = 0;
     for (int a = 0; a < dim; a++) {
-      r += abs(vec_position[a]);
+      r += abs(position[a]);
     }
     return r;
   }
 
-  int[] getPos() {
-    return orientation.multiply(vec_position);
-  }
+  //int[] getPos() {
+  //  return orientation.multiply(position);
+  //}
 
   // changes wasClicked to true if the piece was clicked on
   boolean clickCheck(float clickX, float clickY) {

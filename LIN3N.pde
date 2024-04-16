@@ -5,12 +5,25 @@
 int viewOffset = 0;
 float zoomwee = 1.0;
 Menu menu;
+MatrixHelper matrixHelper = new MatrixHelper();
 
 void setup() {
   size(800, 800, P3D);
   surface.setLocation(100, 100);
   menu = new Menu();
+  
+  int[][] test = {
+    {1,0},
+    {0,1}
+  };
+  int[][] test2 = {
+    {2,2},
+    {2,2}
+  };
+  matrixHelper.printMatrix(matrixHelper.multiply(test,test2));
+  
 }
+
 
 
 void draw() {
@@ -20,6 +33,7 @@ void draw() {
 
 void keyPressed() {
   // keybinds eventually?
+  // my new idea for keybinds allows up to 3^16 :D
 }
 
 void mouseWheel(MouseEvent event) {
