@@ -21,11 +21,7 @@ class Puzzle {
 
     pieces = new Piece[bulk];
 
-    // WARNING - it doensn't like this fsr. NullPointerException
-    //resetClickBuffer();
     clickBuffer = new int[] {-1, -1, -1, -1};
-    //menu.progressBarLeftColour = menu.transparent;
-    //menu.progressBarRightColour = menu.transparent;
 
     printClickBuffer();
 
@@ -40,8 +36,6 @@ class Puzzle {
         // clever thing to get the ijk etc from the loop (see my ms paint drawing)
         vec[d-1-v] = (p/((int)pow(3, v))%3)-1;
       }
-      //printArray(vec);
-      //print("\n");
       pieces[p] = new Piece(vec, p);
     }
   }
@@ -51,32 +45,37 @@ class Puzzle {
     for (Piece p : pieces) {
       p.draw();
     }
-    //pieces[].draw();
-    // for debugging certain pieces, put the index of the piece
   }
 
 
   // it says everything isn't adjacent for some reason, but its really close!
   int[] getAdj2C(int idx, int sticker) {
-    int[] adj2cList = new int[2*(dim-1)-2];
+    int[] adj2cList = new int[2*(dim) -4];
     int axis = abs(sticker);
+    int stickerSign = (sticker >= 0? 1: -1);
+    int[] clickedPiecePosition = pieces[idx].position;
+    int oppositePieceIdx = -47;
 
-    int[] all2cOnCell = new int[2*(dim-1)];
+
+
     int i = 0;
     for (Piece p : pieces) {
-      if (p.getC() == 2) {
-        if (p.position[axis] == (sticker > 0 ? 1 : -1)) {
-          all2cOnCell[i] = p.idx;
-          i++;
+      for (int h = 0; h < clickedPiecePosition.length; h++) {
+        if ((p.position[h] == 1 && clickedPiecePosition[h] == -1) || (p.position[h] == -1 && clickedPiecePosition[h] == 1)) {
+          oppositePieceIdx = p.idx;
         }
       }
-    }
-    for (int t = 0; t < adj2cList.length; t++) {
-      if (true) {
-        all2cOnCell[t] = adj2cList[t];
+
+
+      // if 2c and on the same cell and not the clicked 2c and not the opposite 2c
+      if (p.getC() == 2 && (p.position[axis] == stickerSign) && (p.position != clickedPiecePosition) && p.idx != oppositePieceIdx) {
+        adj2cList[i] = p.idx;
+        p.highlighted = true;
+        i++;
       }
     }
-    return all2cOnCell;
+    matrixHelper.printVector(adj2cList);
+    return adj2cList;
   }
 
 
@@ -142,21 +141,19 @@ class Puzzle {
       return;
     }
 
-    int[] adj = getAdj2C(idx, sticker);
+    clickBuffer[2] = idx;
+    clickBuffer[3] = sticker;
+    printClickBuffer();
+
+    // adj holds adjacent pieces to the first 2c piece clicked
+    int[] adj = getAdj2C(clickBuffer[0], clickBuffer[1]);
     boolean piece2isAdjacent = false;
     for (int w = 0; w < adj.length; w++) {
       if (adj[w] == clickBuffer[0]) piece2isAdjacent = true;
     }
 
-    if (clickBuffer[0] != -1 && !piece2isAdjacent) {
+    if (!piece2isAdjacent) {
       println("ERROR: that 2c is not adjacent");
-      return;
-    }
-    if (!clickBufferEmpty()) {
-      clickBuffer[2] = idx;
-      clickBuffer[3] = sticker;
-      printClickBuffer();
-      menu.progressBarRightColour = menu.green;
       return;
     }
   }

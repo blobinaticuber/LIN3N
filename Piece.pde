@@ -9,6 +9,8 @@ class Piece {
 
   int[][] orientation;
   int[] position;
+  
+  boolean highlighted = false;
 
   Piece(int[] p, int idx) {
     position = new int[p.length];
@@ -35,6 +37,9 @@ class Piece {
     // if the piece is in the clickBuffer, draw it with a bigger outline
     if (menu.puzzle.clickBufferHas(idx)) {
       stroke(menu.white);
+      strokeWeight(5);
+    } else if (highlighted) {
+      stroke(menu.yellow);
       strokeWeight(5);
     }
 
@@ -89,8 +94,9 @@ class Piece {
     return matrixHelper.multiply(orientation, position);
   }
 
-  // changes wasClicked to true if the piece was clicked on
+
   boolean clickCheck(float clickX, float clickY) {
+    highlighted = false;
     boolean stickerLegitimacy = false;
     if (clickX < pieceLeftmostCoordinate && clickX > pieceRightmostCoordinate) {
       if (clickY < (s/2) && clickY > (-1)*(s/2)) {
@@ -100,11 +106,17 @@ class Piece {
             sticker = n;
           }
         }
+        // is the sticker the user clicked not draw as transparent basically
+        if (idx > menu.puzzle.bulk/3) {
+          stickerLegitimacy = (position[abs(sticker)] != (sticker>=0 ? 1 : -1));
+        } else {
+          stickerLegitimacy = (position[abs(sticker)] != (sticker>0 ? 1 : -1));
+        }
 
-        stickerLegitimacy = (position[abs(sticker)] != (sticker>0 ? 1 : -1));
 
 
-        println("you clicked piece " + idx + ", sticker " + sticker);
+
+        println("clicked " + idx + ", " + sticker);
         //println("adjacent 2c's:");
         //matrixHelper.printVector(menu.puzzle.getAdj2C(idx, sticker));
         menu.puzzle.updateClickBuffer(idx, sticker, stickerLegitimacy);
