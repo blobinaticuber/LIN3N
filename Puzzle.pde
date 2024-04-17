@@ -56,6 +56,30 @@ class Puzzle {
   }
 
 
+  // it says everything isn't adjacent for some reason, but its really close!
+  int[] getAdj2C(int idx, int sticker) {
+    int[] adj2cList = new int[2*(dim-1)-2];
+    int axis = abs(sticker);
+
+    int[] all2cOnCell = new int[2*(dim-1)];
+    int i = 0;
+    for (Piece p : pieces) {
+      if (p.getC() == 2) {
+        if (p.position[axis] == (sticker > 0 ? 1 : -1)) {
+          all2cOnCell[i] = p.idx;
+          i++;
+        }
+      }
+    }
+    for (int t = 0; t < adj2cList.length; t++) {
+      if (true) {
+        all2cOnCell[t] = adj2cList[t];
+      }
+    }
+    return all2cOnCell;
+  }
+
+
   boolean clickBufferEmpty() {
     return (clickBuffer[0] == -1 && clickBuffer[1] == -1 && clickBuffer[2] == -1 && clickBuffer[3] == -1);
   }
@@ -82,14 +106,14 @@ class Puzzle {
     // I also have to make it bad if the 2nd one in the buffer
     // is not an adjacent 2c on the same side as the first.
     // for right now, it just detects if they're both 2c pieces...
-    
+
     if (clickBufferFull()) {
       // do the appropriate twist, then reset buffer
       resetClickBuffer();
       printClickBuffer();
       return;
     }
-    
+
     if (pieces[idx].getC() != 2) {
       println("ERROR: cannot add non-2c piece to clickBuffer");
       printClickBuffer();
@@ -117,6 +141,17 @@ class Puzzle {
       menu.progressBarRightColour = menu.red;
       return;
     }
+
+    int[] adj = getAdj2C(idx, sticker);
+    boolean piece2isAdjacent = false;
+    for (int w = 0; w < adj.length; w++) {
+      if (adj[w] == clickBuffer[0]) piece2isAdjacent = true;
+    }
+
+    if (clickBuffer[0] != -1 && !piece2isAdjacent) {
+      println("ERROR: that 2c is not adjacent");
+      return;
+    }
     if (!clickBufferEmpty()) {
       clickBuffer[2] = idx;
       clickBuffer[3] = sticker;
@@ -124,8 +159,5 @@ class Puzzle {
       menu.progressBarRightColour = menu.green;
       return;
     }
-
-    
-    
   }
 }

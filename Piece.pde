@@ -7,7 +7,7 @@ class Piece {
   int pieceLeftmostCoordinate;
   int pieceRightmostCoordinate;
 
-  //NMatrix orientation;
+  int[][] orientation;
   int[] position;
 
   Piece(int[] p, int idx) {
@@ -15,6 +15,7 @@ class Piece {
     for (int a = 0; a < p.length; a++) {
       position[a] = p[a];
     }
+    orientation = matrixHelper.identity(dim);
     dim = p.length;
     //orientation = new NMatrix(dim);
     this.idx = idx;
@@ -84,9 +85,9 @@ class Piece {
     return r;
   }
 
-  //int[] getPos() {
-  //  return orientation.multiply(position);
-  //}
+  int[] getPos() {
+    return matrixHelper.multiply(orientation, position);
+  }
 
   // changes wasClicked to true if the piece was clicked on
   boolean clickCheck(float clickX, float clickY) {
@@ -104,6 +105,8 @@ class Piece {
 
 
         println("you clicked piece " + idx + ", sticker " + sticker);
+        //println("adjacent 2c's:");
+        //matrixHelper.printVector(menu.puzzle.getAdj2C(idx, sticker));
         menu.puzzle.updateClickBuffer(idx, sticker, stickerLegitimacy);
         return true;
       }
