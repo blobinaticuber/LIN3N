@@ -9,7 +9,7 @@ class Piece {
 
   int[][] orientation;
   int[] position;
-  
+
   boolean highlighted = false;
 
   Piece(int[] p, int idx) {
@@ -34,13 +34,15 @@ class Piece {
     strokeWeight(1);
     stroke(menu.black);
 
-    // if the piece is in the clickBuffer, draw it with a bigger outline
-    if (menu.puzzle.clickBufferHas(idx)) {
-      stroke(menu.white);
-      strokeWeight(5);
-    } else if (highlighted) {
-      stroke(menu.yellow);
-      strokeWeight(5);
+    if (dim>2) {
+      // if the piece is in the clickBuffer, draw it with a big white outline
+      if (menu.puzzle.clickBufferHas(idx)) {
+        stroke(menu.white);
+        strokeWeight(5);
+      } else if (menu.puzzle.adjHas(idx) && !menu.puzzle.adjEmpty()) {
+        stroke(menu.yellow);
+        strokeWeight(5);
+      }
     }
 
     pushMatrix();
@@ -106,19 +108,22 @@ class Piece {
             sticker = n;
           }
         }
-        // is the sticker the user clicked not draw as transparent basically
-        if (idx > menu.puzzle.bulk/3) {
-          stickerLegitimacy = (position[abs(sticker)] != (sticker>=0 ? 1 : -1));
-        } else {
-          stickerLegitimacy = (position[abs(sticker)] != (sticker>0 ? 1 : -1));
+        // the sticker they clicked is legitimate if its 1 or -1 in the vector
+        if (position[abs(sticker)] != 0) {
+          stickerLegitimacy = true;
+          stickerLegitimacy = ((position[abs(sticker)] > 0 && sticker >= 0 ) || (position[abs(sticker)] < 0 && sticker <= 0 ));
         }
 
 
 
-
+        println();
         println("clicked " + idx + ", " + sticker);
-        //println("adjacent 2c's:");
-        //matrixHelper.printVector(menu.puzzle.getAdj2C(idx, sticker));
+
+        if (getC()==2 && menu.puzzle.clickBufferEmpty()) {
+          println(stickerLegitimacy);
+          println("adjacent 2c's:");
+          matrixHelper.printVector(menu.puzzle.getAdj2C(idx, sticker));
+        }
         menu.puzzle.updateClickBuffer(idx, sticker, stickerLegitimacy);
         return true;
       }

@@ -227,6 +227,7 @@ class Menu {
     }
     if (resetClickBuffer.clicked(x, y)) {
       puzzle.resetClickBuffer();
+      if (puzzleSize>2) puzzle.adj = new int[2*(puzzleSize) -4];
       progressBarReset();
     }
   }

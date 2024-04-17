@@ -3,6 +3,7 @@ class Puzzle {
   Piece[] pieces;
   // click buffer will be {clicked piece 1 index, sticker of piece 1 clicked, same for piece 2, etc}
   int[] clickBuffer = new int[4];
+  int[] adj;
   int dim;
   int bulk;
   // bulk is 3^d
@@ -22,6 +23,8 @@ class Puzzle {
     pieces = new Piece[bulk];
 
     clickBuffer = new int[] {-1, -1, -1, -1};
+    
+    if (d>2) adj = new int[2*(dim) -4];
 
     printClickBuffer();
 
@@ -48,17 +51,17 @@ class Puzzle {
   }
 
 
-  // it says everything isn't adjacent for some reason, but its really close!
+  // it works for everything but clicking orange and red rn
   int[] getAdj2C(int idx, int sticker) {
     int[] adj2cList = new int[2*(dim) -4];
     int axis = abs(sticker);
-    int stickerSign = (sticker >= 0? 1: -1);
+    int stickerSign = (sticker >= 0? 1: -1); // is the sticker neg or pos
     int[] clickedPiecePosition = pieces[idx].position;
     int oppositePieceIdx = -47;
 
 
 
-    int i = 0;
+    
     for (Piece p : pieces) {
       for (int h = 0; h < clickedPiecePosition.length; h++) {
         if ((p.position[h] == 1 && clickedPiecePosition[h] == -1) || (p.position[h] == -1 && clickedPiecePosition[h] == 1)) {
@@ -66,7 +69,7 @@ class Puzzle {
         }
       }
 
-
+      int i = 0;
       // if 2c and on the same cell and not the clicked 2c and not the opposite 2c
       if (p.getC() == 2 && (p.position[axis] == stickerSign) && (p.position != clickedPiecePosition) && p.idx != oppositePieceIdx) {
         adj2cList[i] = p.idx;
@@ -74,7 +77,7 @@ class Puzzle {
         i++;
       }
     }
-    matrixHelper.printVector(adj2cList);
+    //matrixHelper.printVector(adj2cList);
     return adj2cList;
   }
 
@@ -90,6 +93,25 @@ class Puzzle {
   boolean clickBufferHas(int idx) {
     return (clickBuffer[0] == idx || clickBuffer[2] == idx);
   }
+  
+  boolean adjHas(int idx) {
+    boolean has = false;
+    for (int i = 0; i < adj.length; i++) {
+      if (adj[i] == idx) {
+       has = true;
+       break;
+      }
+    }
+    return has;
+  }
+  
+  boolean adjEmpty() {
+    boolean has = false;
+    for (int i = 0; i < adj.length; i++) {
+       has = (adj[i] == 0);
+    }
+    return has;
+  }
 
   void resetClickBuffer() {
     menu.progressBarLeftColour = menu.transparent;
@@ -102,17 +124,7 @@ class Puzzle {
   }
 
   void updateClickBuffer(int idx, int sticker, boolean stickerLegitimacy) {
-    // I also have to make it bad if the 2nd one in the buffer
-    // is not an adjacent 2c on the same side as the first.
-    // for right now, it just detects if they're both 2c pieces...
-
-    if (clickBufferFull()) {
-      // do the appropriate twist, then reset buffer
-      resetClickBuffer();
-      printClickBuffer();
-      return;
-    }
-
+    
     if (pieces[idx].getC() != 2) {
       println("ERROR: cannot add non-2c piece to clickBuffer");
       printClickBuffer();
@@ -123,7 +135,7 @@ class Puzzle {
       printClickBuffer();
       return;
     }
-    if (stickerLegitimacy) {
+    if (!stickerLegitimacy) {
       println("ERROR: cannot add piece to clickBuffer because clicked sticker does not exist");
       printClickBuffer();
       return;
@@ -131,30 +143,41 @@ class Puzzle {
     if (clickBufferEmpty()) {
       clickBuffer[0] = idx;
       clickBuffer[1] = sticker;
+      adj = getAdj2C(clickBuffer[0], clickBuffer[1]);
       printClickBuffer();
       menu.progressBarLeftColour = menu.green;
       return;
     }
+    boolean p2isAdj = false;
+    for (int t = 0; t < adj.length; t++) {
+      if (adj[t] == idx) {
+        p2isAdj = true;
+        break;
+      }
+    }
+    if (!p2isAdj) {
+      println("ERROR: that 2c is not adjacent");
+      return;
+    }
     if (clickBuffer[1] != sticker) {
-      println("Error: must click same sticker of 2nd piece as first piece");
+      println("ERROR: must click same sticker of 2nd piece as first piece");
       menu.progressBarRightColour = menu.red;
       return;
     }
-
+    
+    //adj = new int[2*(dim) -4];
     clickBuffer[2] = idx;
     clickBuffer[3] = sticker;
     printClickBuffer();
 
-    // adj holds adjacent pieces to the first 2c piece clicked
-    int[] adj = getAdj2C(clickBuffer[0], clickBuffer[1]);
-    boolean piece2isAdjacent = false;
-    for (int w = 0; w < adj.length; w++) {
-      if (adj[w] == clickBuffer[0]) piece2isAdjacent = true;
-    }
-
-    if (!piece2isAdjacent) {
-      println("ERROR: that 2c is not adjacent");
+    if (clickBufferFull()) {
+      // do the appropriate twist, then reset buffer
+      println("DOING A TWIST!!!!!");
+      resetClickBuffer();
+      printClickBuffer();
       return;
     }
+
+
   }
 }
