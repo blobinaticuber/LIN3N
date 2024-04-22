@@ -53,30 +53,49 @@ class Puzzle {
 
   // it works for everything but clicking orange and red rn
   int[] getAdj2C(int idx, int sticker) {
-    int[] adj2cList = new int[2*(dim) -4];
+    int[] adj2cList = new int[0]; //= new int[(2*dim) -4];
     int axis = abs(sticker);
-    int stickerSign = (sticker >= 0? 1: -1); // is the sticker neg or pos
+    int stickerSign = 0; // is the sticker negative or positive
+    if (sticker > 0) stickerSign = 1;
+    if (sticker < 0) stickerSign = -1;
+    println("stickersigh: " + stickerSign);
     int[] clickedPiecePosition = pieces[idx].position;
-    int oppositePieceIdx = -47;
-
-
-
+    int oppositePieceIdx = -47; // some random defualt value
     
-    for (Piece p : pieces) {
-      for (int h = 0; h < clickedPiecePosition.length; h++) {
-        if ((p.position[h] == 1 && clickedPiecePosition[h] == -1) || (p.position[h] == -1 && clickedPiecePosition[h] == 1)) {
-          oppositePieceIdx = p.idx;
-        }
-      }
-
-      int i = 0;
-      // if 2c and on the same cell and not the clicked 2c and not the opposite 2c
-      if (p.getC() == 2 && (p.position[axis] == stickerSign) && (p.position != clickedPiecePosition) && p.idx != oppositePieceIdx) {
-        adj2cList[i] = p.idx;
-        p.highlighted = true;
-        i++;
+    
+    int[] allCell2c = new int[(2*dim)-2];
+    int a = 0;
+    // looping through all pieces, 
+    for (int i = 0; i < bulk-1; i++) {
+      // 2c piece AND 
+      if (pieces[i].getC() == 2 && pieces[i].position[axis] == stickerSign) {
+        allCell2c[a] = pieces[i].idx;
+        a++;
       }
     }
+    println(allCell2c);
+    
+    // once we have an array of all the 2c on that cell
+
+
+
+
+    //for (Piece p : pieces) {
+    //  //for (int h = 0; h < clickedPiecePosition.length; h++) {
+    //  //  if ((p.position[h] == 1 && clickedPiecePosition[h] == -1) || (p.position[h] == -1 && clickedPiecePosition[h] == 1)) {
+    //  //    oppositePieceIdx = p.idx;
+          
+    //  //  }
+    //  //}
+
+      
+    //  // if 2c and on the same cell and not the clicked 2c and not the opposite 2c
+    //  if (p.getC() == 2 && (p.position[axis] == stickerSign) && (p.position != clickedPiecePosition) && p.idx != oppositePieceIdx) {
+    //    adj2cList = append(adj2cList, p.idx);
+    //    p.highlighted = true;
+    //  }
+    //}
+    //println("oppositePieceIdx: "+oppositePieceIdx);
     //matrixHelper.printVector(adj2cList);
     return adj2cList;
   }

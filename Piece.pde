@@ -120,9 +120,9 @@ class Piece {
         println("clicked " + idx + ", " + sticker);
 
         if (getC()==2 && menu.puzzle.clickBufferEmpty()) {
-          println(stickerLegitimacy);
-          println("adjacent 2c's:");
-          matrixHelper.printVector(menu.puzzle.getAdj2C(idx, sticker));
+          //println(stickerLegitimacy);
+          //println("adjacent 2c's:");
+          //matrixHelper.printVector(menu.puzzle.getAdj2C(idx, sticker));
         }
         menu.puzzle.updateClickBuffer(idx, sticker, stickerLegitimacy);
         return true;
