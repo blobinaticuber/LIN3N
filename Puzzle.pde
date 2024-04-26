@@ -23,7 +23,7 @@ class Puzzle {
     pieces = new Piece[bulk];
 
     clickBuffer = new int[] {-1, -1, -1, -1};
-    
+
     if (d>2) adj = new int[2*(dim) -4];
 
     printClickBuffer();
@@ -53,50 +53,78 @@ class Puzzle {
 
   int[] getAdj2C(int idx, int sticker) {
     int[] allCell2c = new int[(2*dim) -2];
-    int[] adj2cList = new int[(2*dim) -3];
-    
+    int[] adj2cList = new int[(2*dim) -2];
+
     int axis = abs(sticker);
     int stickerSign = 0; // is the sticker negative or positive
-    
+
     if (sticker > 0) stickerSign = 1;
     if (sticker < 0) stickerSign = -1;
     // if they clicked sticker 0, determine its sign based on index (clever!!)
     if (sticker == 0 && idx > 2*bulk/3) stickerSign = 1;
     if (sticker == 0 && idx < bulk/3) stickerSign = -1;
-    
+
     //println("stickersign: " + (stickerSign > 0 ? "positive" : "negative"));
     int[] clickedPiecePosition = pieces[idx].position;
     int oppositePieceIdx = -47; // some random defualt value
-    
-    
-    
-    int a = 0;
-    // looping through all pieces, 
+
+    int[] oppositePiecePosition = new int[dim];
+    arrayCopy(clickedPiecePosition, oppositePiecePosition);
+
+    for (int g = 0; g < dim; g++) {
+      if (g != axis) oppositePiecePosition[g] *= -1;
+    }
+    // oppositePiecePosition should contain the correct vector
     for (int i = 0; i < bulk-1; i++) {
-      // 2c piece AND 
-      if (pieces[i].getC() == 2 && pieces[i].position[axis] == stickerSign) {
-        allCell2c[a] = pieces[i].idx;
-        a++;
+      if (pieces[i].getC() == 2) {
+        if (Arrays.equals(oppositePiecePosition, pieces[i].position)) {
+          oppositePieceIdx = i;
+          break;
+        }
+      }
+    }
+
+    int a = 0;
+    // looping through all pieces
+    for (int i = 0; i < bulk-1; i++) {
+
+      if (pieces[i].getC() == 2) {
+
+
+        if (pieces[i].position[axis] == stickerSign) {
+          allCell2c[a] = pieces[i].idx;
+          a++;
+        }
       }
     }
     println("all 2c on cell:");
     println(allCell2c);
-    
-    
-    // once we have an array of all the 2c on that cell, remove it and it opposite,
+
+
+    // once we have an array of all the 2c on that cell, remove it and its opposite,
     // leaving us with an array of only the adjacent 2c on that cell
+
+    for (int j = 0; j < allCell2c.length; j++) {
+      if (allCell2c[j] == idx || allCell2c[j] == oppositePieceIdx) {
+        adj2cList[j] = -50;
+      } else {
+        adj2cList[j] = allCell2c[j];
+      }
+    }
     
-    //for (int j = 0; j < allCell2c.length; j++) {
-    //  if (allCell2c[j] != idx) adj2cList[j] = allCell2c[j];
-    //}
-    
+    adj2cList = sort(adj2cList);
+    adj2cList = reverse(adj2cList);
+    adj2cList = shorten(adj2cList);
+    adj2cList = shorten(adj2cList);
+
     println("all ADJACENT 2c:");
     println(adj2cList);
-    
 
-    adj = allCell2c;
-    return allCell2c;
+    adj = adj2cList;
+    return adj2cList;
   }
+
+
 
 
   boolean clickBufferEmpty() {
@@ -110,22 +138,22 @@ class Puzzle {
   boolean clickBufferHas(int idx) {
     return (clickBuffer[0] == idx || clickBuffer[2] == idx);
   }
-  
+
   boolean adjHas(int idx) {
     boolean has = false;
     for (int i = 0; i < adj.length; i++) {
       if (adj[i] == idx) {
-       has = true;
-       break;
+        has = true;
+        break;
       }
     }
     return has;
   }
-  
+
   boolean adjEmpty() {
     boolean has = false;
     for (int i = 0; i < adj.length; i++) {
-       has = (adj[i] == 0);
+      has = (adj[i] == 0);
     }
     return has;
   }
@@ -141,7 +169,7 @@ class Puzzle {
   }
 
   void updateClickBuffer(int idx, int sticker, boolean stickerLegitimacy) {
-    
+
     if (pieces[idx].getC() != 2) {
       println("ERROR: cannot add non-2c piece to clickBuffer");
       printClickBuffer();
@@ -181,7 +209,7 @@ class Puzzle {
       menu.progressBarRightColour = menu.red;
       return;
     }
-    
+
     //adj = new int[2*(dim) -4];
     clickBuffer[2] = idx;
     clickBuffer[3] = sticker;
@@ -194,7 +222,5 @@ class Puzzle {
       printClickBuffer();
       return;
     }
-
-
   }
 }
