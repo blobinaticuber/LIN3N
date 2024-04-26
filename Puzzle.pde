@@ -51,19 +51,25 @@ class Puzzle {
   }
 
 
-  // it works for everything but clicking orange and red rn
   int[] getAdj2C(int idx, int sticker) {
-    int[] adj2cList = new int[0]; //= new int[(2*dim) -4];
+    int[] allCell2c = new int[(2*dim) -2];
+    int[] adj2cList = new int[(2*dim) -3];
+    
     int axis = abs(sticker);
     int stickerSign = 0; // is the sticker negative or positive
+    
     if (sticker > 0) stickerSign = 1;
     if (sticker < 0) stickerSign = -1;
-    println("stickersigh: " + stickerSign);
+    // if they clicked sticker 0, determine its sign based on index (clever!!)
+    if (sticker == 0 && idx > 2*bulk/3) stickerSign = 1;
+    if (sticker == 0 && idx < bulk/3) stickerSign = -1;
+    
+    //println("stickersign: " + (stickerSign > 0 ? "positive" : "negative"));
     int[] clickedPiecePosition = pieces[idx].position;
     int oppositePieceIdx = -47; // some random defualt value
     
     
-    int[] allCell2c = new int[(2*dim)-2];
+    
     int a = 0;
     // looping through all pieces, 
     for (int i = 0; i < bulk-1; i++) {
@@ -73,31 +79,23 @@ class Puzzle {
         a++;
       }
     }
+    println("all 2c on cell:");
     println(allCell2c);
     
-    // once we have an array of all the 2c on that cell
-
-
-
-
-    //for (Piece p : pieces) {
-    //  //for (int h = 0; h < clickedPiecePosition.length; h++) {
-    //  //  if ((p.position[h] == 1 && clickedPiecePosition[h] == -1) || (p.position[h] == -1 && clickedPiecePosition[h] == 1)) {
-    //  //    oppositePieceIdx = p.idx;
-          
-    //  //  }
-    //  //}
-
-      
-    //  // if 2c and on the same cell and not the clicked 2c and not the opposite 2c
-    //  if (p.getC() == 2 && (p.position[axis] == stickerSign) && (p.position != clickedPiecePosition) && p.idx != oppositePieceIdx) {
-    //    adj2cList = append(adj2cList, p.idx);
-    //    p.highlighted = true;
-    //  }
+    
+    // once we have an array of all the 2c on that cell, remove it and it opposite,
+    // leaving us with an array of only the adjacent 2c on that cell
+    
+    //for (int j = 0; j < allCell2c.length; j++) {
+    //  if (allCell2c[j] != idx) adj2cList[j] = allCell2c[j];
     //}
-    //println("oppositePieceIdx: "+oppositePieceIdx);
-    //matrixHelper.printVector(adj2cList);
-    return adj2cList;
+    
+    println("all ADJACENT 2c:");
+    println(adj2cList);
+    
+
+    adj = allCell2c;
+    return allCell2c;
   }
 
 
