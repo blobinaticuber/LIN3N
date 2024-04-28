@@ -212,7 +212,8 @@ class Menu {
         p.clickCheck(clickX, clickY); //println("clicked on piece " + p.idx + ", which is a " + p.getC() + "c");
       }
     }
-
+    
+    if (puzzle.clickBufferFull()) puzzle.twist();
 
 
     if (dimDecrease.clicked(x, y) && puzzle.dim>puzzleSizeMin) {

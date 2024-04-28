@@ -59,6 +59,35 @@ class MatrixHelper {
 
 
   // functions to get rotation matrices:
+  
+  int[][] getRotationMatrix(int c1, int c2) {
+    int[][] matthew = identity(menu.puzzleSize);
+    if (c1 == c2) {
+      println("error! cannot swap column with itself");
+      return matthew;
+    } else {
+    // need to swap from and to columns of identity
+    // then need to invert the one where from goes to after swap (invert c2)
+    
+    int[] temp = new int[menu.puzzleSize];
+    
+    for (int i = 0; i < temp.length; i++) {
+      temp[i] = matthew[c1][i];
+    }
+    for (int j = 0; j < temp.length; j++) {
+      matthew[c1][j] = matthew[c2][j];
+    }
+    for (int k = 0; k < temp.length; k++) {
+      matthew[c2][k] = temp[k]*(-1);
+    }
+    
+    
+    
+    printMatrix(matthew);
+    return matthew;
+    }
+    
+  }
 
 
   // prints the matrix to the Console for debugging porpoises

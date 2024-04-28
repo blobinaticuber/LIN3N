@@ -50,6 +50,70 @@ class Puzzle {
     }
   }
 
+// ---------------------------------
+// TWISTING STUFF
+
+
+  void twist() {
+    
+    // assuming twistBuffer[1] == twistBuffer[3] cuz yeah
+    
+    // convert the clickBuffer to twistBuffer
+    int[] twistBuffer = new int[3];
+    //twistBuffer[0] = clickBuffer[1];
+    //println(twistBuffer);
+    
+    // axis is like which sticker they clicked on (which side is the first in twistbuffer)
+    int sticker = clickBuffer[1];
+    int stickerSign = 0;
+    
+    int fidx = clickBuffer[0];
+    int tidx = clickBuffer[2];
+    
+    int fromAxis = -46;
+    int toAxis = -46;
+
+    
+    if (sticker > 0) stickerSign = 1;
+    if (sticker < 0) stickerSign = -1;
+    if (sticker == 0 && fidx > 2*bulk/3) stickerSign = 1;
+    if (sticker == 0 && fidx < bulk/3) stickerSign = -1;
+    
+    
+    for (int i = 0; i < dim; i++) {
+      if (i != abs(sticker) && pieces[fidx].position[i] != 0) {
+        fromAxis = i;
+      }
+      if (i != abs(sticker) && pieces[tidx].position[i] != 0) {
+        toAxis = i;
+      }
+    }
+    
+    
+    
+    println("Twisting axis: " + sticker + " sign: " + stickerSign + " from " + fromAxis + " to " + toAxis);
+    
+    
+    int[][] rotationMatrix = matrixHelper.getRotationMatrix(fromAxis, toAxis);
+
+    
+    // 1. figure out the correct rotation matrix based on the clickBuffer
+    // 2. loop through all the pieces, and if they are on that side, do the move
+    
+    //for (Piece p: pieces) {
+    //  if (p.getPos()[something] = something)  p.move();
+    //}
+  }
+
+
+
+
+
+
+
+// ---------------------------------
+// CLICK BUFFER STUFF
+
 
   int[] getAdj2C(int idx, int sticker) {
     int[] allCell2c = new int[(2*dim) -2];
@@ -218,6 +282,7 @@ class Puzzle {
     if (clickBufferFull()) {
       // do the appropriate twist, then reset buffer
       println("DOING A TWIST!!!!!");
+      twist();
       resetClickBuffer();
       printClickBuffer();
       return;
