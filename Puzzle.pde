@@ -55,14 +55,6 @@ class Puzzle {
 
 
   void twist() {
-    
-    // assuming twistBuffer[1] == twistBuffer[3] cuz yeah
-    
-    // convert the clickBuffer to twistBuffer
-    int[] twistBuffer = new int[3];
-    //twistBuffer[0] = clickBuffer[1];
-    //println(twistBuffer);
-    
     // axis is like which sticker they clicked on (which side is the first in twistbuffer)
     int sticker = clickBuffer[1];
     int stickerSign = 0;
@@ -95,14 +87,11 @@ class Puzzle {
     
     
     int[][] rotationMatrix = matrixHelper.getRotationMatrix(fromAxis, toAxis);
-
+    matrixHelper.printMatrix(rotationMatrix);
     
-    // 1. figure out the correct rotation matrix based on the clickBuffer
-    // 2. loop through all the pieces, and if they are on that side, do the move
-    
-    //for (Piece p: pieces) {
-    //  if (p.getPos()[something] = something)  p.move();
-    //}
+    for (Piece p: pieces) {
+      if (p.getPos()[abs(sticker)] == stickerSign)  p.move(rotationMatrix);
+    }
   }
 
 

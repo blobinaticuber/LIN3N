@@ -17,15 +17,23 @@ class Piece {
     for (int a = 0; a < p.length; a++) {
       position[a] = p[a];
     }
-    orientation = matrixHelper.identity(dim);
     dim = p.length;
-    //orientation = new NMatrix(dim);
+    orientation = matrixHelper.identity(dim);
     this.idx = idx;
 
     s = (width/((int)pow(3, dim)/(int)pow(3, dim-1)))/((2*dim)+1);
     xStickerCenterCoordinate = (width/((int)pow(3, dim)/(int)pow(3, dim-1)))*(idx-(((int)pow(3, dim)-1)/2));
     pieceLeftmostCoordinate = (xStickerCenterCoordinate+(s/2))+(s*(dim-1));
     pieceRightmostCoordinate = (xStickerCenterCoordinate-(s/2))-(s*(dim-1));
+  }
+  
+  
+  void move(int[][] m) {
+    orientation = matrixHelper.multiply(orientation, m);
+  }
+  
+  int[] getPos() {
+    return matrixHelper.multiply(orientation, position);
   }
 
   // draw ALL of the sticker of the piece
@@ -63,13 +71,13 @@ class Piece {
       color c1 = menu.transparent;
       color c2 = menu.transparent;
       if (d==1) {
-        if (position[0]==0) fill(menu.transparent);
-        if (position[0]==1) fill(menu.red);
-        if (position[0]==-1) fill(menu.orange);
+        if (getPos()[0]==0) fill(menu.transparent);
+        if (getPos()[0]==1) fill(menu.red);
+        if (getPos()[0]==-1) fill(menu.orange);
         rect(0, 0, s, s);
       } else {
-        if (position[d-1]==1) c1 = menu.posColours[d-1];
-        else if (position[d-1]==-1) c2 = menu.negColours[d-1];
+        if (getPos()[d-1]==1) c1 = menu.posColours[d-1];
+        else if (getPos()[d-1]==-1) c2 = menu.negColours[d-1];
         // draw 2 squares for the + and - axis stickers
         fill(c1);
         rect(s*(d-1), 0, s, s);
@@ -91,11 +99,6 @@ class Piece {
     }
     return r;
   }
-
-  int[] getPos() {
-    return matrixHelper.multiply(orientation, position);
-  }
-
 
   boolean clickCheck(float clickX, float clickY) {
     highlighted = false;

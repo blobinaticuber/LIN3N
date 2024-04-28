@@ -80,10 +80,6 @@ class MatrixHelper {
     for (int k = 0; k < temp.length; k++) {
       matthew[c2][k] = temp[k]*(-1);
     }
-    
-    
-    
-    printMatrix(matthew);
     return matthew;
     }
     
