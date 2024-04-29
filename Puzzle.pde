@@ -38,7 +38,7 @@ class Puzzle {
       negColours[c] = negColours[c];
     }
 
-
+ 
     //p goes through all the pieces (3^d)
     for (int p = 0; p < bulk; p++) {
       // make a vector with dimension number of spots

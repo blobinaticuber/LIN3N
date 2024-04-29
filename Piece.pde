@@ -15,6 +15,7 @@ class Piece {
   boolean highlighted = false;
 
   Piece(int[] p, int idx) {
+
     dim = p.length;
     this.idx = idx;
     position = new int[dim];
@@ -28,8 +29,9 @@ class Piece {
     orientation = matrixHelper.identity(dim);
 
 
-    s = (width/((int)pow(3, dim)/(int)pow(3, dim-1)))/((2*dim)+1);
-    xStickerCenterCoordinate = (width/((int)pow(3, dim)/(int)pow(3, dim-1)))*(idx-(((int)pow(3, dim)-1)/2));
+    s = (width/3)/((2*dim)+1);
+    //xStickerCenterCoordinate = (width/((int)pow(3, dim)/(int)pow(3, dim-1)))*(idx-(((int)pow(3, dim)-1)/2));
+    xStickerCenterCoordinate = (width/3)*(getIdx2()-(((int)pow(3, dim)-1)/2));
     pieceLeftmostCoordinate = (xStickerCenterCoordinate+(s/2))+(s*(dim-1));
     pieceRightmostCoordinate = (xStickerCenterCoordinate-(s/2))-(s*(dim-1));
   }
@@ -43,11 +45,33 @@ class Piece {
     return matrixHelper.multiply(orientation, position);
   }
 
+  // gets the index of where the piece goes to afer all the moves
+  int getIdx2() {
+    int idx2 = 0;
+    //idx2 -= ((int)pow(3,dim-1))/2;
+    for (int r = 0; r < dim; r++) {
+      idx2 += ((getPos()[r]+1) * (int)pow(3, dim-r-1));
+    }
+
+
+    // the naive solution
+    // it doesnt work because NullPointerException
+    //for (Piece p: menu.puzzle.pieces) {
+    //  if (Arrays.equals(getPos(), p.position)) idx2 = p.idx;
+    //}
+    return idx2;
+  }
+
   // draw ALL of the stickers of the piece
   void draw() {
     rectMode(CENTER);
     strokeWeight(1);
     stroke(menu.black);
+
+
+    xStickerCenterCoordinate = (width/3)*(getIdx2()-(((int)pow(3, dim)-1)/2));
+    pieceLeftmostCoordinate = (xStickerCenterCoordinate+(s/2))+(s*(dim-1));
+    pieceRightmostCoordinate = (xStickerCenterCoordinate-(s/2))-(s*(dim-1));
 
     if (dim>2) {
       // if the piece is in the clickBuffer, draw it with a big white outline
@@ -74,35 +98,42 @@ class Piece {
     //translate to x sticker of piece
     translate(xStickerCenterCoordinate, 0);
 
-
-    //int[] x = new int[dim];
-    //x[0] = 1;
-
     for (int i = 0; i < dim; i++) {
       color LC = menu.transparent;
       color RC = menu.transparent;
-      if (getPos()[i] == 1) {
-        LC = menu.transparent;
-        RC = menu.posColours[i];
-      }
-      if (getPos()[i] == -1) {
-        LC = menu.negColours[i];
-        RC = menu.transparent;
-      }
+
       int[] stickerStart = new int[dim];
       stickerStart[i] = 1;
       int[] stickerWent = matrixHelper.multiply(orientation, stickerStart);
-      // if the sticker went to the x axis
-      if (Arrays.equals(stickerWent, stickerStart) ) {
-        if (getPos()[0]==-1) fill(menu.negColours[0]);
-        if (getPos()[0]==0) fill(menu.transparent);
-        if (getPos()[0]==1) fill(menu.posColours[0]);
-        rect(0, 0, s, s);
+      int stickerWentIndex = 0;
+      for (int k = 0; k < dim; k++) {
+        if (stickerWent[k] != 0) stickerWentIndex = k;
       }
-      fill(RC);
-      rect(s*(i), 0, s, s);
-      fill(LC);
-      rect(s*(-1*(i)), 0, s, s);
+
+      if (getPos()[i] == 1) {
+        RC = menu.posColours[stickerWentIndex];
+      } else if (getPos()[i] == -1) {
+        LC = menu.negColours[stickerWentIndex];
+      }
+      //println("start");
+      //println(stickerStart);
+      //println("went");
+      //println(stickerWent);
+      //println(stickerWentIndex);
+
+      // if the sticker went to the x axis
+      // actually: if the sticker went to itself (didnt move)
+      if (stickerWentIndex==0 && Arrays.equals(stickerWent, stickerStart) ) {
+        if (getPos()[0]==-1) fill(menu.negColours[stickerWentIndex]);
+        if (getPos()[0]==0) fill(menu.transparent);
+        if (getPos()[0]==1) fill(menu.posColours[stickerWentIndex]);
+        rect(0, 0, s, s);
+      } else {
+        fill(RC);
+        rect(s*(i), 0, s, s);
+        fill(LC);
+        rect(s*(-1*(i)), 0, s, s);
+      }
     }
 
 
@@ -132,12 +163,13 @@ class Piece {
           }
         }
         // the sticker they clicked is legitimate if its 1 or -1 in the vector
-        if (position[abs(sticker)] != 0) {
+        if (getPos()[abs(sticker)] != 0) {
           stickerLegitimacy = true;
-          stickerLegitimacy = ((position[abs(sticker)] > 0 && sticker >= 0 ) || (position[abs(sticker)] < 0 && sticker <= 0 ));
+          stickerLegitimacy = ((getPos()[abs(sticker)] > 0 && sticker >= 0 ) || (getPos()[abs(sticker)] < 0 && sticker <= 0 ));
         }
         println();
         println("clicked " + idx + ", " + sticker);
+        println("idx2: " + getIdx2());
         menu.puzzle.updateClickBuffer(idx, sticker, stickerLegitimacy);
         return true;
       }
