@@ -12,7 +12,7 @@ MatrixHelper matrixHelper = new MatrixHelper();
 void setup() {
   size(800, 800, P3D);
   surface.setLocation(100, 100);
-  menu = new Menu();
+  menu = new Menu(); //<>//
 }
 
 

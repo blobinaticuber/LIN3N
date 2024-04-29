@@ -9,15 +9,26 @@ class Piece {
 
   int[][] orientation;
   int[] position;
+  color[] pColours;
+  color[] nColours;
 
   boolean highlighted = false;
 
   Piece(int[] p, int idx) {
-    position = new int[p.length];
-    for (int a = 0; a < p.length; a++) {
+    dim = p.length;
+    position = new int[dim];
+    for (int a = 0; a < dim; a++) {
       position[a] = p[a];
     }
-    dim = p.length;
+    
+    pColours = new color[dim];
+    nColours = new color[dim];
+    //for (int b = 0; b < dim; b++) {
+    //  pColours[b] = menu.posColours[b];
+    //  nColours[b] = menu.negColours[b];
+    //}
+    
+    
     orientation = matrixHelper.identity(dim);
     this.idx = idx;
 
@@ -36,7 +47,7 @@ class Piece {
     return matrixHelper.multiply(orientation, position);
   }
 
-  // draw ALL of the sticker of the piece
+  // draw ALL of the stickers of the piece
   void draw() {
     rectMode(CENTER);
     strokeWeight(1);
@@ -65,15 +76,19 @@ class Piece {
 
     //translate to x sticker of piece
     translate(xStickerCenterCoordinate, 0);
-
+    
+    //color[] posFills = matrixHelper.multiply(orientation, menu.posColours);
+    //color[] negFills = matrixHelper.multiply(orientation, menu.negColours);
 
     for (int d = 1; d < dim+1; d++) {
       color c1 = menu.transparent;
       color c2 = menu.transparent;
+      //matrixHelper.multiply(orientation, menu.puzzle.negColours)[0]);
       if (d==1) {
+        if (getPos()[0]==-1) fill(menu.negColours[0]);
         if (getPos()[0]==0) fill(menu.transparent);
-        if (getPos()[0]==1) fill(menu.red);
-        if (getPos()[0]==-1) fill(menu.orange);
+        if (getPos()[0]==1) fill(menu.posColours[0]);
+        
         rect(0, 0, s, s);
       } else {
         if (getPos()[d-1]==1) c1 = menu.posColours[d-1];

@@ -7,34 +7,42 @@ class Puzzle {
   int dim;
   int bulk;
   // bulk is 3^d
+  
+  color[] posColours;
+  color[] negColours;
+  
+  int twistCount;
 
 
 
 
   Puzzle(int d) {
+    twistCount = 0;
     // resets the view to the center of the puzzle when making a new puzzle
     viewOffset = 0;
     zoomwee = 1.0;
-
     dim = d;
-
     bulk = (int)pow(3, dim);
-
     pieces = new Piece[bulk];
-
     clickBuffer = new int[] {-1, -1, -1, -1};
-
     if (d>2) adj = new int[2*(dim) -4];
-
-    printClickBuffer();
+    //printClickBuffer();
+    
+    //posColours = subset(menu.posColours, 0, dim);
+    //negColours = subset(menu.negColours, 0, dim);
+    posColours = new color[dim];
+    negColours = new color[dim];
+    
+    for (int c = 0; c < dim; c++) {
+      posColours[c] = posColours[c];
+      negColours[c] = negColours[c];
+    }
 
 
     //p goes through all the pieces (3^d)
     for (int p = 0; p < bulk; p++) {
-
       // make a vector with dimension number of spots
       int[] vec = new int[d];
-
       for (int v = 0; v < d; v++) {
         // clever thing to get the ijk etc from the loop (see my ms paint drawing)
         vec[d-1-v] = (p/((int)pow(3, v))%3)-1;
@@ -55,6 +63,7 @@ class Puzzle {
 
 
   void twist() {
+    twistCount++;
     // axis is like which sticker they clicked on (which side is the first in twistbuffer)
     int sticker = clickBuffer[1];
     int stickerSign = 0;

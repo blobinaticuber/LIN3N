@@ -44,9 +44,10 @@ class Menu {
 
 
 
-  Puzzle puzzle = new Puzzle(puzzleSize);
+  Puzzle puzzle; //<>//
 
   Menu() {
+    puzzle = new Puzzle(puzzleSize);
     menuPanelWidth = width/3;
     menuPanelHeight = height/3;
     progressBarReset();
@@ -127,7 +128,7 @@ class Menu {
     // also only start the timer after a twist
     // if puzzle becomes solved, stop the timer lol
     text("time: " + (millis()/1000.0), 10+width/3, 100);
-    text("twists: 0", 10+width/3, 200);
+    text("twists: " + puzzle.twistCount, 10+width/3, 200);
   }
 
   void drawColourMenu() {
