@@ -16,33 +16,29 @@ class Piece {
 
   Piece(int[] p, int idx) {
     dim = p.length;
+    this.idx = idx;
     position = new int[dim];
     for (int a = 0; a < dim; a++) {
       position[a] = p[a];
     }
-    
+
     pColours = new color[dim];
     nColours = new color[dim];
-    //for (int b = 0; b < dim; b++) {
-    //  pColours[b] = menu.posColours[b];
-    //  nColours[b] = menu.negColours[b];
-    //}
-    
-    
+
     orientation = matrixHelper.identity(dim);
-    this.idx = idx;
+
 
     s = (width/((int)pow(3, dim)/(int)pow(3, dim-1)))/((2*dim)+1);
     xStickerCenterCoordinate = (width/((int)pow(3, dim)/(int)pow(3, dim-1)))*(idx-(((int)pow(3, dim)-1)/2));
     pieceLeftmostCoordinate = (xStickerCenterCoordinate+(s/2))+(s*(dim-1));
     pieceRightmostCoordinate = (xStickerCenterCoordinate-(s/2))-(s*(dim-1));
   }
-  
-  
+
+
   void move(int[][] m) {
     orientation = matrixHelper.multiply(orientation, m);
   }
-  
+
   int[] getPos() {
     return matrixHelper.multiply(orientation, position);
   }
@@ -58,6 +54,7 @@ class Piece {
       if (menu.puzzle.clickBufferHas(idx)) {
         stroke(menu.white);
         strokeWeight(5);
+        // if the piece is in the adjacent 2c buffer, draw it with yellow outline
       } else if (menu.puzzle.adjHas(idx) && !menu.puzzle.adjEmpty()) {
         stroke(menu.yellow);
         strokeWeight(5);
@@ -76,30 +73,38 @@ class Piece {
 
     //translate to x sticker of piece
     translate(xStickerCenterCoordinate, 0);
-    
-    //color[] posFills = matrixHelper.multiply(orientation, menu.posColours);
-    //color[] negFills = matrixHelper.multiply(orientation, menu.negColours);
 
-    for (int d = 1; d < dim+1; d++) {
-      color c1 = menu.transparent;
-      color c2 = menu.transparent;
-      //matrixHelper.multiply(orientation, menu.puzzle.negColours)[0]);
-      if (d==1) {
+
+    //int[] x = new int[dim];
+    //x[0] = 1;
+
+    for (int i = 0; i < dim; i++) {
+      color LC = menu.transparent;
+      color RC = menu.transparent;
+      if (getPos()[i] == 1) {
+        LC = menu.transparent;
+        RC = menu.posColours[i];
+      }
+      if (getPos()[i] == -1) {
+        LC = menu.negColours[i];
+        RC = menu.transparent;
+      }
+      int[] stickerStart = new int[dim];
+      stickerStart[i] = 1;
+      int[] stickerWent = matrixHelper.multiply(orientation, stickerStart);
+      // if the sticker went to the x axis
+      if (Arrays.equals(stickerWent, stickerStart) ) {
         if (getPos()[0]==-1) fill(menu.negColours[0]);
         if (getPos()[0]==0) fill(menu.transparent);
         if (getPos()[0]==1) fill(menu.posColours[0]);
-        
         rect(0, 0, s, s);
-      } else {
-        if (getPos()[d-1]==1) c1 = menu.posColours[d-1];
-        else if (getPos()[d-1]==-1) c2 = menu.negColours[d-1];
-        // draw 2 squares for the + and - axis stickers
-        fill(c1);
-        rect(s*(d-1), 0, s, s);
-        fill(c2);
-        rect(s*(-1*(d-1)), 0, s, s);
       }
+      fill(RC);
+      rect(s*(i), 0, s, s);
+      fill(LC);
+      rect(s*(-1*(i)), 0, s, s);
     }
+
 
     popMatrix();
     strokeWeight(1);
@@ -131,17 +136,8 @@ class Piece {
           stickerLegitimacy = true;
           stickerLegitimacy = ((position[abs(sticker)] > 0 && sticker >= 0 ) || (position[abs(sticker)] < 0 && sticker <= 0 ));
         }
-
-
-
         println();
         println("clicked " + idx + ", " + sticker);
-
-        if (getC()==2 && menu.puzzle.clickBufferEmpty()) {
-          //println(stickerLegitimacy);
-          //println("adjacent 2c's:");
-          //matrixHelper.printVector(menu.puzzle.getAdj2C(idx, sticker));
-        }
         menu.puzzle.updateClickBuffer(idx, sticker, stickerLegitimacy);
         return true;
       }
